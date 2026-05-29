@@ -1473,8 +1473,8 @@ footer {
 }
 
 .new-card {
-  background: #EDEDE8; /* Soft, premium warm-toned gray to create subtle luxury contrast */
-  background-image: url("assets/design.png"); /* Custom gold arabesque geometric lines design */
+  background: #F7F5F0; /* Soft, premium warm-toned ivory/alabaster cream */
+  background-image: url("assets/design.png"); /* Delicate gold arabesque geometric lines design */
   background-size: 100% 100%; /* Stretches the lines design perfectly across the card so it is 100% visible on all screen sizes! */
   background-position: center;
   background-repeat: no-repeat;
@@ -1492,7 +1492,7 @@ footer {
 .new-card:hover {
   transform: translateY(-8px);
   border-color: rgba(198, 167, 105, 0.4);
-  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.05);
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.05);
 }
 
 .new-card-badge {
@@ -1560,11 +1560,12 @@ footer {
 
 .new-card-category {
   font-size: 0.7rem;
-  color: #888888;
+  color: var(--accent-gold);
   text-transform: uppercase;
-  letter-spacing: 1px;
+  letter-spacing: 1.5px;
   margin-bottom: 0.4rem;
   font-family: var(--font-sans);
+  font-weight: 600;
 }
 
 .new-card-title {
@@ -1578,7 +1579,7 @@ footer {
 
 .new-card-price {
   font-family: var(--font-serif);
-  color: var(--accent-gold);
+  color: var(--accent-gold) !important; /* Elegant gold price tag */
   font-size: 1.05rem;
   font-weight: 600;
   margin-bottom: 1.2rem;
@@ -1776,8 +1777,8 @@ footer {
 
 .featured-product-card {
   display: flex;
-  background: #EDEDE8; /* Soft, premium warm-toned gray */
-  background-image: url("assets/design.png"); /* Custom gold arabesque lines design */
+  background: #F7F5F0; /* Soft, premium warm-toned ivory/alabaster cream */
+  background-image: url("assets/design.png"); /* Delicate gold geometric lines */
   background-size: 100% 100%;
   background-position: center;
   background-repeat: no-repeat;
@@ -1795,7 +1796,7 @@ footer {
 .featured-product-card:hover {
   transform: translateY(-5px);
   border-color: rgba(198, 167, 105, 0.4);
-  box-shadow: 0 12px 25px rgba(0, 0, 0, 0.04);
+  box-shadow: 0 12px 25px rgba(0, 0, 0, 0.05);
 }
 
 .featured-img-column {
@@ -1827,11 +1828,12 @@ footer {
 
 .featured-category {
   font-size: 0.72rem;
-  color: #888888;
+  color: var(--accent-gold);
   text-transform: uppercase;
   letter-spacing: 1.5px;
   margin-bottom: 0.6rem;
   font-family: var(--font-sans);
+  font-weight: 600;
 }
 
 .featured-title {
@@ -1845,7 +1847,7 @@ footer {
 
 .featured-description {
   font-family: var(--font-sans);
-  color: #444444;
+  color: #444444; /* Clean warm charcoal legibility */
   font-size: 0.88rem;
   line-height: 1.6;
   margin-bottom: 1.5rem;
@@ -2928,6 +2930,370 @@ footer {
 /* Automatically hide contact detail item rows that are empty */
 .contact-detail-item:has(.contact-detail-text:empty) {
   display: none !important;
+}
+
+/* ==========================================================================
+   DEDICATED COLLECTIONS CATALOG PAGE (collection.html)
+   ========================================================================== */
+
+/* Light luxurious body modify */
+.collection-page-body {
+  background-color: #FFFFFF !important;
+  color: var(--text-soft);
+}
+
+.collection-main-section {
+  padding-top: 160px;
+  padding-bottom: 6rem;
+  background-color: #FFFFFF;
+}
+
+/* Page Split Layout Grid */
+.collection-layout-container {
+  display: flex;
+  gap: 3.5rem;
+  align-items: flex-start;
+}
+
+/* Sidebar Styling & Widgets */
+.collection-sidebar {
+  width: 300px;
+  display: flex;
+  flex-direction: column;
+  gap: 2.2rem;
+  flex-shrink: 0;
+}
+
+.sidebar-widget {
+  background: #F7F5F0; /* Soft premium warm-toned ivory/alabaster cream */
+  background-image: url("assets/design.png"); /* Delicate gold geometric lines */
+  background-size: 100% 100%;
+  background-position: center;
+  background-repeat: no-repeat;
+  border: 1px solid var(--border-color);
+  border-radius: 16px;
+  padding: 2.2rem 2rem;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.02);
+}
+
+.widget-title {
+  font-family: var(--font-sans);
+  font-size: 0.88rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 1.8px;
+  color: #111111;
+  margin-bottom: 1.5rem;
+  border-bottom: 1px solid rgba(198, 167, 105, 0.15);
+  padding-bottom: 0.8rem;
+}
+
+/* Price Range Slider Widget */
+.price-range-slider {
+  display: flex;
+  flex-direction: column;
+  gap: 1.2rem;
+}
+
+.price-slider-input {
+  -webkit-appearance: none;
+  width: 100%;
+  height: 4px;
+  background: var(--border-color);
+  border-radius: 2px;
+  outline: none;
+  transition: background 0.3s ease;
+}
+
+.price-slider-input::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: var(--accent-gold);
+  border: 1.5px solid #FFFFFF;
+  cursor: pointer;
+  box-shadow: 0 2px 6px rgba(198, 167, 105, 0.3);
+  transition: transform 0.2s ease, background 0.2s ease;
+}
+
+.price-slider-input::-webkit-slider-thumb:hover {
+  transform: scale(1.15);
+  background: var(--accent-hover);
+}
+
+.price-range-display-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 0.5rem;
+}
+
+.price-range-text {
+  font-family: var(--font-sans);
+  font-size: 0.82rem;
+  color: #333333;
+}
+
+.price-range-text .highlight {
+  color: var(--accent-gold);
+  font-weight: 600;
+}
+
+.btn-sidebar-action {
+  padding: 0.5rem 1.2rem;
+  border-radius: 20px;
+  border: 1px solid var(--accent-gold);
+  background: #FFFFFF;
+  color: var(--accent-gold);
+  font-size: 0.78rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  transition: var(--transition-fast);
+}
+
+.btn-sidebar-action:hover {
+  background: var(--accent-gold);
+  color: #FFFFFF;
+}
+
+/* Custom Checkbox Widget */
+.checkbox-widget-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.custom-checkbox-container {
+  display: flex;
+  align-items: center;
+  position: relative;
+  padding-left: 30px;
+  cursor: pointer;
+  font-family: var(--font-sans);
+  font-size: 0.85rem;
+  color: #333333;
+  user-select: none;
+  transition: var(--transition-fast);
+}
+
+.custom-checkbox-container:hover {
+  color: #000000;
+}
+
+.custom-checkbox-input {
+  position: absolute;
+  opacity: 0;
+  cursor: pointer;
+  height: 0;
+  width: 0;
+}
+
+.checkbox-mark {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  transform: translateY(-50%);
+  height: 18px;
+  width: 18px;
+  background-color: #FFFFFF;
+  border: 1.5px solid var(--border-color);
+  border-radius: 4px;
+  transition: var(--transition-fast);
+}
+
+.custom-checkbox-container:hover input ~ .checkbox-mark {
+  border-color: var(--accent-gold);
+}
+
+.custom-checkbox-container input:checked ~ .checkbox-mark {
+  background-color: var(--accent-gold);
+  border-color: var(--accent-gold);
+}
+
+.checkbox-mark::after {
+  content: "";
+  position: absolute;
+  display: none;
+  left: 5px;
+  top: 2px;
+  width: 5px;
+  height: 9px;
+  border: solid white;
+  border-width: 0 2px 2px 0;
+  transform: rotate(45deg);
+}
+
+.custom-checkbox-container input:checked ~ .checkbox-mark::after {
+  display: block;
+}
+
+.checkbox-label-text {
+  font-weight: 500;
+}
+
+/* Right Main Panel */
+.collection-main-panel {
+  flex-grow: 1;
+}
+
+/* Top Filters Bar */
+.collection-top-bar {
+  display: flex;
+  gap: 1.2rem;
+  justify-content: space-between;
+  align-items: center;
+  background: #F7F5F0; /* Soft premium warm-toned ivory/alabaster cream */
+  background-image: url("assets/design.png"); /* Delicate gold geometric lines */
+  background-size: 100% 100%;
+  background-repeat: no-repeat;
+  background-position: center;
+  border: 1px solid var(--border-color);
+  border-radius: 16px;
+  padding: 1.2rem 2rem;
+  margin-bottom: 2.5rem;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.02);
+}
+
+.collection-search-wrapper {
+  flex: 1; /* Automatically stretches to occupy all available remaining horizontal space */
+}
+
+.collection-search-wrapper .search-field {
+  padding-left: 2.6rem !important; /* Left search icon spacing */
+  padding-right: 1.2rem !important;
+  background: #FFFFFF !important;
+  border: 1px solid var(--border-color) !important;
+}
+
+.collection-search-wrapper .search-field:focus {
+  border-color: var(--accent-gold) !important;
+}
+
+.filter-select-wrapper {
+  flex: 0 0 280px; /* Locks the sorting select dropdown to a spacious 280px width so all text is 100% visible! */
+  position: relative;
+}
+
+.luxury-filter-select {
+  width: 100%;
+  padding: 0.75rem 1.8rem 0.75rem 1.2rem;
+  border-radius: 30px;
+  border: 1px solid var(--border-color);
+  background: #FFFFFF;
+  color: #333333;
+  font-family: var(--font-sans);
+  font-size: 0.8rem;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  outline: none;
+  cursor: pointer;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  transition: border-color 0.3s ease;
+  background-image: url("data:image/svg+xml;utf8,<svg fill='%23C6A769' height='24' viewBox='0 0 24 24' width='24' xmlns='http://www.w3.org/2000/svg'><path d='M7 10l5 5 5-5z'/><path d='M0 0h24v24H0z' fill='none'/></svg>");
+  background-repeat: no-repeat;
+  background-position: calc(100% - 10px) center;
+  background-size: 16px;
+}
+
+.luxury-filter-select:focus {
+  border-color: var(--accent-gold);
+}
+
+/* Products Catalog Grid & Loading/Empty States */
+.collection-products-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 2.5rem;
+}
+
+.catalog-loading-state, .empty-catalog-message {
+  grid-column: 1 / -1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 6rem 0;
+  text-align: center;
+  color: var(--accent-gold);
+  font-family: var(--font-sans);
+}
+
+.catalog-loading-state p, .empty-catalog-message p {
+  margin-top: 1.2rem;
+  font-size: 0.95rem;
+  font-weight: 500;
+  letter-spacing: 0.5px;
+}
+
+.empty-catalog-message p {
+  color: #F9F9F6; /* High contrast text on dark obsidian background */
+}
+
+/* Dynamic Add-to-cart layout fixes inside collection card */
+.new-card-category {
+  color: var(--accent-gold) !important;
+  font-weight: 600 !important;
+}
+
+/* back arrow in sub-page header */
+.nav-back-wrapper {
+  flex: 1;
+  display: flex;
+  align-items: center;
+}
+
+.nav-back-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: var(--transition-fast);
+}
+
+.nav-back-btn:hover {
+  transform: translateX(-4px) scale(1.05);
+}
+
+/* Responsive Rules for Collections split grid */
+@media (max-width: 992px) {
+  .collection-layout-container {
+    flex-direction: column !important; /* Stack vertically on tablet/mobiles */
+    gap: 2.5rem !important;
+  }
+  
+  .collection-sidebar {
+    width: 100% !important;
+    display: grid !important;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)) !important;
+    gap: 1.5rem !important;
+  }
+  
+  .collection-top-bar {
+    flex-direction: column !important;
+    padding: 1.5rem !important;
+    gap: 1rem !important;
+  }
+  
+  .collection-search-wrapper, .filter-select-wrapper {
+    width: 100% !important;
+  }
+}
+
+@media (max-width: 768px) {
+  .collection-main-section {
+    padding-top: 120px !important;
+  }
+}
+
+@media (max-width: 576px) {
+  .collection-sidebar {
+    grid-template-columns: 1fr !important; /* Single column stack widgets on phone */
+  }
 }
 
 
