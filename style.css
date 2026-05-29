@@ -121,19 +121,25 @@ header {
   left: 0;
   width: 100%;
   z-index: 1000;
-  background: var(--accent-gold); /* Matte Gold at top */
+  background: #FFFFFF; /* Pure White top bar background exactly like Ajmal! */
   backdrop-filter: none;
   -webkit-backdrop-filter: none;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+  border-bottom: 1px solid var(--border-color);
   transition: var(--transition);
 }
 
 header.scrolled {
   padding: 0.2rem 0;
-  background: rgba(198, 167, 105, 0.9); /* Glassmorphic Matte Gold when scrolling */
+  background: rgba(255, 255, 255, 0.9); /* Glassmorphic Pure White when scrolling */
   backdrop-filter: blur(15px);
   -webkit-backdrop-filter: blur(15px);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+  border-bottom: 1px solid rgba(198, 167, 105, 0.15);
+}
+
+header.hidden {
+  transform: translateY(-100%); /* Smoothly slide up out of viewport */
+  opacity: 0;
+  pointer-events: none; /* Disable interactions when hidden */
 }
 
 header.scrolled .nav-container {
@@ -162,7 +168,7 @@ header.scrolled .brand-logo-img {
 }
 
 .nav-search-btn {
-  color: #FFFFFF; /* Pure White icon for high contrast on Matte Gold */
+  color: var(--accent-gold); /* Gilded Gold icon on Pure White top bar */
   font-size: 1.3rem;
   display: flex;
   justify-content: center;
@@ -171,7 +177,7 @@ header.scrolled .brand-logo-img {
 }
 
 .nav-search-btn:hover {
-  color: rgba(255, 255, 255, 0.8);
+  color: var(--accent-hover);
   transform: scale(1.05);
 }
 
@@ -184,9 +190,47 @@ header.scrolled .brand-logo-img {
   align-items: center;
 }
 
-.search-input-container.open {
-  width: 280px; /* Spacious width for the pill */
-  opacity: 1;
+/* RESPONSIVE SEARCH BAR - ALWAYS OPEN ON DESKTOP, COLLAPSED TOGGLE ON MOBILE */
+@media (min-width: 992px) {
+  /* Hide the outer search icon button since the bar is always open */
+  .nav-search-btn {
+    display: none !important;
+  }
+  
+  /* Always expand the search container and make it wider (longer on both sides) */
+  .search-input-container {
+    width: 420px !important; /* Extremely spacious pill search bar exactly as requested */
+    opacity: 1 !important;
+    overflow: visible !important;
+    pointer-events: auto !important;
+  }
+  
+  /* Hide the close X icon on desktop since it stays open permanently */
+  .pill-close-btn {
+    display: none !important;
+  }
+}
+
+@media (max-width: 991px) {
+  /* On mobile and tablet, start collapsed and animate when .open class is added */
+  .nav-search-btn {
+    display: flex !important;
+  }
+  
+  .search-input-container {
+    width: 0;
+    opacity: 0;
+    overflow: hidden;
+  }
+  
+  .search-input-container.open {
+    width: 280px; /* Standard elegant mobile width */
+    opacity: 1;
+  }
+  
+  .pill-close-btn {
+    display: flex !important;
+  }
 }
 
 .pill-search-box {
@@ -199,7 +243,7 @@ header.scrolled .brand-logo-img {
 .search-field {
   width: 100%;
   background: #FFFFFF; /* Pure White background */
-  border: none;
+  border: none; /* Handled by SVG overlay for smooth glowing path animation */
   border-radius: 40px; /* Fully rounded pill corners! */
   color: #333333; /* Dark slate text */
   padding: 0.7rem 2.6rem 0.7rem 2.6rem; /* Left padding for search, right for close icon */
@@ -216,7 +260,54 @@ header.scrolled .brand-logo-img {
 
 .search-field:focus {
   outline: none;
-  border: 1px solid var(--accent-gold);
+}
+
+/* DYNAMIC GLOWING BORDER ANIMATION STYLES */
+.search-border-svg {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none; /* Allow clicks to pass through to search input */
+  z-index: 4;
+}
+
+.search-border-rect {
+  fill: none;
+  stroke: var(--border-color);
+  stroke-width: 1.5px;
+  rx: 21px; /* Capsule pill radius */
+  ry: 21px;
+  stroke-dasharray: 100 0;
+  stroke-dashoffset: 0;
+  transition: stroke 0.3s ease;
+}
+
+/* Trigger animation when input is focused, or when container gets .open class */
+.search-field:focus ~ .search-border-svg .search-border-rect,
+.search-input-container.open .search-border-rect {
+  animation: drawBorderGlow 1.4s cubic-bezier(0.25, 1, 0.5, 1) forwards;
+}
+
+@keyframes drawBorderGlow {
+  0% {
+    stroke-dasharray: 10 90;
+    stroke-dashoffset: 100;
+    stroke: var(--accent-gold);
+    filter: drop-shadow(0 0 2px rgba(198, 167, 105, 0.4));
+  }
+  70% {
+    stroke-dasharray: 30 70;
+    stroke: var(--accent-gold);
+    filter: drop-shadow(0 0 3px rgba(198, 167, 105, 0.6));
+  }
+  100% {
+    stroke-dasharray: 100 0;
+    stroke-dashoffset: 0;
+    stroke: rgba(198, 167, 105, 0.65); /* Elegant, thin matte gold glow */
+    filter: drop-shadow(0 0 2px rgba(198, 167, 105, 0.3));
+  }
 }
 
 .pill-search-icon {
@@ -257,6 +348,7 @@ header.scrolled .brand-logo-img {
   height: 100px;
   width: auto;
   object-fit: contain;
+  filter: sepia(1) saturate(1.8) hue-rotate(5deg) brightness(0.85) contrast(1.1); /* Elegant Matte Gold brand mark on White top bar! */
   transition: var(--transition);
 }
 
@@ -367,7 +459,35 @@ header.scrolled .brand-logo-img {
   display: flex;
   align-items: center;
   overflow: hidden;
-  background: url('assets/hero_background.png') no-repeat center center/cover;
+  background: #000000;
+}
+
+.hero-slides {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+}
+
+.hero-slide {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-position: center center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  opacity: 0;
+  transition: opacity 1.5s ease-in-out; /* Smooth slow transition! */
+  z-index: 1;
+}
+
+.hero-slide.active {
+  opacity: 1;
+  z-index: 2;
 }
 
 .hero-overlay {
@@ -377,6 +497,7 @@ header.scrolled .brand-logo-img {
   width: 100%;
   height: 100%;
   pointer-events: none;
+  z-index: 3;
 }
 
 .hero-content {
@@ -1239,4 +1360,171 @@ footer {
   padding: 2px 6px;
   border-radius: 50%;
   border: 1px solid var(--accent-gold);
+}
+
+/* NEW ARRIVALS SECTION (AJMAL POP-OUT CARD STYLE) */
+.new-arrivals {
+  padding: 4.5rem 0;
+  background: var(--bg-sec);
+  border-top: 1px solid var(--border-color);
+}
+
+.new-arrivals-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 4.5rem 2.2rem; /* Spaced out vertically to support overflowing bottles */
+  margin-top: 4rem; /* Additional margin at the top so row 1 doesn't collide with section-header */
+}
+
+.new-card {
+  background: #FAF8F5; /* Exact warm cream off-white background from Ajmal */
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='100' viewBox='0 0 100 100'%3E%3Cpath d='M0 0 L50 50 L100 0 M50 50 L50 100' fill='none' stroke='rgba(198,167,105,0.04)' stroke-width='0.5'/%3E%3Ccircle cx='50' cy='50' r='8' fill='none' stroke='rgba(198,167,105,0.04)' stroke-width='0.5'/%3E%3C/svg%3E"); /* Arabesque pattern */
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  overflow: visible; /* CRITICAL: Allows perfume bottles to pop out of top border! */
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  padding: 1.5rem 1.5rem 1.8rem 1.5rem; /* Compact padding */
+  margin-top: 50px; /* Space for the overlapping top bottle image */
+  transition: var(--transition);
+}
+
+.new-card:hover {
+  transform: translateY(-8px);
+  border-color: rgba(198, 167, 105, 0.4);
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.05);
+}
+
+.new-card-badge {
+  position: absolute;
+  top: 15px;
+  left: 15px;
+  background: #FFFFFF;
+  border: 1px solid var(--border-color);
+  padding: 3px 9px;
+  border-radius: 20px;
+  font-size: 0.7rem;
+  font-weight: 500;
+  color: var(--accent-gold);
+  z-index: 5;
+}
+
+.new-card-wishlist {
+  position: absolute;
+  top: 15px;
+  right: 15px;
+  color: #888888;
+  z-index: 5;
+  background: none;
+  border: none;
+  cursor: pointer;
+  transition: var(--transition-fast);
+}
+
+.new-card-wishlist:hover {
+  color: #ff4a4a;
+  transform: scale(1.1);
+}
+
+.new-card-img-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 150px; /* Tighter wrapper */
+  margin-top: -65px; /* Shifts wrapper upwards to overlap top border */
+  margin-bottom: 1.2rem;
+  background: transparent;
+  position: relative;
+  z-index: 3;
+}
+
+.new-card-img {
+  max-height: 190px; /* Stretches beyond the wrapper, creating 3D pop out */
+  max-width: 100%;
+  object-fit: contain;
+  mix-blend-mode: multiply; /* Blends out the background perfectly */
+  filter: contrast(1.1) brightness(1.05) drop-shadow(0 12px 16px rgba(0,0,0,0.14)); /* Pushes light-gray to pure white so it dissolves completely */
+  transition: var(--transition);
+}
+
+.new-card:hover .new-card-img {
+  transform: translateY(-8px) scale(1.05); /* Floating hover effect */
+}
+
+.new-card-info {
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+  text-align: center;
+}
+
+.new-card-category {
+  font-size: 0.7rem;
+  color: #888888;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-bottom: 0.4rem;
+  font-family: var(--font-sans);
+}
+
+.new-card-title {
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-size: 1.15rem;
+  color: #111111;
+  margin-bottom: 0.4rem;
+  font-weight: 500;
+}
+
+.new-card-price {
+  font-family: var(--font-serif);
+  color: var(--accent-gold);
+  font-size: 1.05rem;
+  font-weight: 600;
+  margin-bottom: 1.2rem;
+  display: block;
+}
+
+.new-card-actions {
+  display: flex;
+  gap: 0.6rem;
+  justify-content: center;
+  margin-top: auto;
+  padding-top: 0.5rem;
+}
+
+.btn-new-buy-now {
+  flex: 1;
+  padding: 0.65rem 1rem;
+  border-radius: 30px;
+  border: 1.5px solid var(--accent-gold);
+  background: #FFFFFF;
+  color: var(--accent-gold);
+  font-size: 0.75rem;
+  font-weight: 500;
+  font-family: var(--font-sans);
+  transition: var(--transition-fast);
+}
+
+.btn-new-buy-now:hover {
+  background: #FAF8F5;
+}
+
+.btn-new-add-to-cart {
+  flex: 1;
+  padding: 0.65rem 1rem;
+  border-radius: 30px;
+  border: 1.5px solid var(--accent-gold);
+  background: var(--accent-gold);
+  color: #FFFFFF;
+  font-size: 0.75rem;
+  font-weight: 500;
+  font-family: var(--font-sans);
+  transition: var(--transition-fast);
+}
+
+.btn-new-add-to-cart:hover {
+  background: var(--accent-hover);
+  border-color: var(--accent-hover);
 }

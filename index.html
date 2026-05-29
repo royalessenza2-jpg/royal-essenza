@@ -34,6 +34,11 @@
             
             <input type="text" class="search-field" placeholder="Search fragrances..." aria-label="Search creations">
             
+            <!-- Dynamic Glowing Border Overlay -->
+            <svg class="search-border-svg" width="100%" height="100%">
+              <rect class="search-border-rect" x="1" y="1" width="calc(100% - 2px)" height="calc(100% - 2px)" rx="20" ry="20" pathLength="100"></rect>
+            </svg>
+            
             <!-- Close icon inside the pill -->
             <button class="pill-close-btn" id="btn-search-close" aria-label="Close search">
               <svg style="width: 18px; height: 18px; fill: #777777;" viewBox="0 0 24 24">
@@ -54,19 +59,126 @@
     </div>
   </header>
 
-  <!-- Luxury Hero Section -->
+  <!-- Luxury Hero Section with Animated Slideshow -->
   <section class="hero">
+    <!-- Sliding Background Layers -->
+    <div class="hero-slides">
+      <div class="hero-slide active" style="background-image: url('assets/hero_background.png');"></div>
+      <div class="hero-slide" style="background-image: url('assets/hero_slide2.png');"></div>
+      <div class="hero-slide" style="background-image: url('assets/hero_slide3.png');"></div>
+    </div>
     <div class="hero-overlay"></div>
+  </section>
+  <!-- New Arrivals Showcase Section (Ajmal Card Style) -->
+  <section id="new-arrivals" class="new-arrivals">
     <div class="container">
-      <div class="hero-content animate-fade-in">
-        <span class="hero-subtitle">Bespoke Fragrances</span>
-        <h1 class="hero-title">Elevate Your<br>Sensory <span>Signature</span></h1>
-        <p class="hero-description">Experience handcrafted olfactory masterpieces curated from the finest botanical ingredients and aged resins from around the globe.</p>
-        <a href="#collections" class="btn-luxury">Explore Collection</a>
+      <div class="section-header">
+        <span class="section-subtitle">Exquisite Creations</span>
+        <h2 class="section-title">New Arrivals</h2>
+      </div>
+
+      <div class="new-arrivals-grid">
+        <!-- Card 1: Hajj Serenity Gift Box -->
+        <div class="new-card">
+          <!-- Rating Badge -->
+          <div class="new-card-badge">★ 5 (1)</div>
+          
+          <!-- Wishlist Heart Icon -->
+          <button class="new-card-wishlist" aria-label="Add to wishlist">
+            <svg style="width: 20px; height: 20px; fill: none; stroke: currentColor; stroke-width: 1.5;" viewBox="0 0 24 24">
+              <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
+            </svg>
+          </button>
+          
+          <div class="new-card-img-wrapper">
+            <img src="assets/new_hajj_giftbox.png" alt="Hajj Serenity Gift Box" class="new-card-img">
+          </div>
+          
+          <div class="new-card-info">
+            <span class="new-card-category">GIFT SET / FEMALE</span>
+            <h3 class="new-card-title">Hajj Serenity Gift Box</h3>
+            <span class="new-card-price">AED 367.5</span>
+            
+            <!-- Dual Action Buttons -->
+            <div class="new-card-actions">
+              <button class="btn-new-buy-now">Buy Now</button>
+              <button class="btn-new-add-to-cart btn-add-to-bag" 
+                      data-id="hajj-serenity" 
+                      data-name="Hajj Serenity Gift Box" 
+                      data-price="367.50" 
+                      data-image="assets/new_hajj_giftbox.png">
+                Add to Cart
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Card 2: Cherry Wood -->
+        <div class="new-card">
+          <!-- Wishlist Heart Icon -->
+          <button class="new-card-wishlist" aria-label="Add to wishlist">
+            <svg style="width: 20px; height: 20px; fill: none; stroke: currentColor; stroke-width: 1.5;" viewBox="0 0 24 24">
+              <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
+            </svg>
+          </button>
+          
+          <div class="new-card-img-wrapper">
+            <img src="assets/new_cherry_wood.png" alt="Cherry Wood Perfume" class="new-card-img">
+          </div>
+          
+          <div class="new-card-info">
+            <span class="new-card-category">EAU DE PARFUM / 100 ML / UNISEX</span>
+            <h3 class="new-card-title">Cherry Wood</h3>
+            <span class="new-card-price">AED 575</span>
+            
+            <!-- Dual Action Buttons -->
+            <div class="new-card-actions">
+              <button class="btn-new-buy-now">Buy Now</button>
+              <button class="btn-new-add-to-cart btn-add-to-bag" 
+                      data-id="cherry-wood-new" 
+                      data-name="Cherry Wood Extrait" 
+                      data-price="575.00" 
+                      data-image="assets/new_cherry_wood.png">
+                Add to Cart
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Card 3: Evoke Red Edition Her -->
+        <div class="new-card">
+          <!-- Wishlist Heart Icon -->
+          <button class="new-card-wishlist" aria-label="Add to wishlist">
+            <svg style="width: 20px; height: 20px; fill: none; stroke: currentColor; stroke-width: 1.5;" viewBox="0 0 24 24">
+              <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
+            </svg>
+          </button>
+          
+          <div class="new-card-img-wrapper">
+            <img src="assets/new_evoke_red.png" alt="Evoke Red Edition Her" class="new-card-img">
+          </div>
+          
+          <div class="new-card-info">
+            <span class="new-card-category">EAU DE PARFUM / 75 ML / FEMALE</span>
+            <h3 class="new-card-title">Evoke Red Edition Her</h3>
+            <span class="new-card-price">AED 175</span>
+            
+            <!-- Dual Action Buttons -->
+            <div class="new-card-actions">
+              <button class="btn-new-buy-now">Buy Now</button>
+              <button class="btn-new-add-to-cart btn-add-to-bag" 
+                      data-id="evoke-red-new" 
+                      data-name="Evoke Red Edition" 
+                      data-price="175.00" 
+                      data-image="assets/new_evoke_red.png">
+                Add to Cart
+              </button>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   </section>
-
   <!-- Scent Explorer Section -->
   <section id="scent-explorer" class="scent-explorer">
     <div class="container">

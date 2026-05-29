@@ -6,11 +6,24 @@
 document.addEventListener('DOMContentLoaded', () => {
   // --- HEADER SCROLL ACTION ---
   const header = document.querySelector('header');
+  const heroSection = document.querySelector('.hero');
+
   window.addEventListener('scroll', () => {
+    // Add scrolled class for glassmorphic transition when scrolling down
     if (window.scrollY > 50) {
       header.classList.add('scrolled');
     } else {
       header.classList.remove('scrolled');
+    }
+
+    // Hide header completely once scrolled past the hero section
+    if (heroSection) {
+      const heroHeight = heroSection.offsetHeight;
+      if (window.scrollY > heroHeight) {
+        header.classList.add('hidden');
+      } else {
+        header.classList.remove('hidden');
+      }
     }
   });
 
@@ -216,6 +229,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const btnSearchClose = document.getElementById('btn-search-close');
 
   function openSearch() {
+    if (window.innerWidth >= 992) return; // Always open on desktop
     searchContainer.classList.add('open');
     if (btnSearchToggle) {
       btnSearchToggle.style.opacity = '0';
@@ -227,6 +241,7 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   function closeSearch() {
+    if (window.innerWidth >= 992) return; // Always open on desktop
     searchContainer.classList.remove('open');
     if (btnSearchToggle) {
       btnSearchToggle.style.opacity = '1';
@@ -296,5 +311,21 @@ document.addEventListener('DOMContentLoaded', () => {
   function validateEmail(email) {
     const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     return re.test(email);
+  }
+
+  // --- HERO SLIDESHOW ROTATION ---
+  const slides = document.querySelectorAll('.hero-slide');
+  let currentSlide = 0;
+  const slideInterval = 5000; // Rotate every 5 seconds
+
+  function nextSlide() {
+    if (slides.length === 0) return;
+    slides[currentSlide].classList.remove('active');
+    currentSlide = (currentSlide + 1) % slides.length;
+    slides[currentSlide].classList.add('active');
+  }
+
+  if (slides.length > 0) {
+    setInterval(nextSlide, slideInterval);
   }
 });
