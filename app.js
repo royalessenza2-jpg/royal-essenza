@@ -426,13 +426,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // --- MOBILE CREATIVE 3D COVERFLOW SLIDER CONTROLLER ---
   const cards = document.querySelectorAll('.new-card');
-  const prevBtn = document.querySelector('.btn-prev');
-  const nextBtn = document.querySelector('.btn-next');
+  const prevBtn = document.querySelector('.new-carousel-btn.btn-prev');
+  const nextBtn = document.querySelector('.new-carousel-btn.btn-next');
 
   if (cards.length > 0 && prevBtn && nextBtn) {
     let currentIndex = 0;
     const totalCards = cards.length;
     let isAnimating = false;
+    let autoRotateInterval;
 
     function updateCardStack() {
       cards.forEach((card, idx) => {
@@ -459,7 +460,7 @@ document.addEventListener('DOMContentLoaded', () => {
       isAnimating = true;
       currentIndex = (currentIndex + 1) % totalCards;
       updateCardStack();
-      setTimeout(() => { isAnimating = false; }, 400);
+      setTimeout(() => { isAnimating = false; }, 500);
     }
 
     function rotatePrev() {
@@ -467,11 +468,33 @@ document.addEventListener('DOMContentLoaded', () => {
       isAnimating = true;
       currentIndex = (currentIndex - 1 + totalCards) % totalCards;
       updateCardStack();
-      setTimeout(() => { isAnimating = false; }, 400);
+      setTimeout(() => { isAnimating = false; }, 500);
     }
 
-    nextBtn.addEventListener('click', rotateNext);
-    prevBtn.addEventListener('click', rotatePrev);
+    // Automatic Rotation Timer Management
+    function startAutoRotation() {
+      stopAutoRotation();
+      autoRotateInterval = setInterval(rotateNext, 5000); // 5 seconds interval
+    }
+
+    function stopAutoRotation() {
+      if (autoRotateInterval) {
+        clearInterval(autoRotateInterval);
+      }
+    }
+
+    function handleManualInteraction(action) {
+      action();
+      startAutoRotation(); // Reset the 5s interval timer
+    }
+
+    nextBtn.addEventListener('click', () => {
+      handleManualInteraction(rotateNext);
+    });
+
+    prevBtn.addEventListener('click', () => {
+      handleManualInteraction(rotatePrev);
+    });
 
     // Tactile direct card clicks (clicking on the left/right cards rotates the carousel!)
     cards.forEach((card) => {
@@ -485,10 +508,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
         if (card.classList.contains('prev-card')) {
           e.preventDefault();
-          rotatePrev();
+          handleManualInteraction(rotatePrev);
         } else if (card.classList.contains('next-card')) {
           e.preventDefault();
-          rotateNext();
+          handleManualInteraction(rotateNext);
         }
       });
     });
@@ -513,12 +536,26 @@ document.addEventListener('DOMContentLoaded', () => {
       const swipeDistance = touchEndX - touchStartX;
       if (swipeDistance < -50) {
         // Swipe Left -> Next card
-        nextBtn.click();
+        handleManualInteraction(rotateNext);
       } else if (swipeDistance > 50) {
         // Swipe Right -> Prev card
-        prevBtn.click();
+        handleManualInteraction(rotatePrev);
       }
     }
+
+    // Initialize auto rotation on mobile viewports on startup
+    if (window.innerWidth <= 768) {
+      startAutoRotation();
+    }
+
+    // Manage timers on viewport resize
+    window.addEventListener('resize', () => {
+      if (window.innerWidth <= 768) {
+        startAutoRotation();
+      } else {
+        stopAutoRotation();
+      }
+    });
   }
 
   // --- BESPOKE CONTACT FORM HANDLER ---

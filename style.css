@@ -1665,8 +1665,8 @@ footer {
     opacity: 0 !important;
     visibility: hidden !important;
     pointer-events: none !important;
-    transform: translate3d(0, 20px, -100px) scale(0.7) !important;
-    transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1), visibility 0.6s ease !important;
+    transform: translate3d(0, 0, -100px) scale(0.7) !important;
+    transition: transform 0.5s cubic-bezier(0.25, 1, 0.5, 1), opacity 0.5s cubic-bezier(0.25, 1, 0.5, 1), visibility 0.5s ease !important;
     transform-style: preserve-3d;
     backface-visibility: hidden;
     will-change: transform, opacity; /* Forces GPU hardware rendering */
@@ -1706,7 +1706,7 @@ footer {
     z-index: 10 !important;
     opacity: 1 !important;
     visibility: visible !important;
-    transform: translate3d(0, 20px, 0) scale(1) !important;
+    transform: translate3d(0, 0, 0) scale(1) !important;
     pointer-events: auto !important;
   }
 
@@ -1715,7 +1715,7 @@ footer {
     z-index: 5 !important;
     opacity: 0.45 !important;
     visibility: visible !important;
-    transform: translate3d(-92px, 20px, -40px) scale(0.82) !important;
+    transform: translate3d(-30%, 0, -80px) scale(0.8) !important;
     pointer-events: auto !important;
   }
 
@@ -1724,7 +1724,7 @@ footer {
     z-index: 5 !important;
     opacity: 0.45 !important;
     visibility: visible !important;
-    transform: translate3d(92px, 20px, -40px) scale(0.82) !important;
+    transform: translate3d(30%, 0, -80px) scale(0.8) !important;
     pointer-events: auto !important;
   }
 
@@ -1918,49 +1918,127 @@ footer {
 }
 
 /* RESPONSIVE OVERRIDES FOR FEATURED CARD */
-@media (max-width: 768px) {
+@media (max-width: 992px) {
   .featured-product-card {
-    flex-direction: column;
-    padding: 2rem;
-    gap: 1.8rem;
-    max-width: 300px !important; /* Keep mobile card tight and consistent */
-    text-align: center;
+    flex-direction: row !important; /* Keep side-by-side exactly like desktop! */
+    padding: 1.5rem !important;
+    gap: 1.5rem !important;
+    max-width: 100% !important;
+    text-align: left !important;
   }
   
   .featured-img-column {
-    width: 100%;
-    margin-top: 0;
+    flex: 0.9 !important;
+    width: auto !important;
+    margin-top: 0 !important;
   }
   
   .featured-card-img {
-    max-height: 220px;
+    max-height: 240px !important;
   }
   
   .featured-info-column {
-    width: 100%;
-    align-items: center;
+    flex: 1.1 !important;
+    width: auto !important;
+    align-items: flex-start !important;
   }
 
   .featured-title {
-    font-size: 1.5rem;
+    font-size: 1.6rem !important;
+  }
+
+  .featured-description {
+    font-size: 0.82rem !important;
+    line-height: 1.5 !important;
+    margin-bottom: 1rem !important;
   }
 
   .featured-price-row {
-    flex-direction: column;
-    gap: 0.4rem;
-    width: 100%;
-    align-items: center;
+    flex-direction: row !important;
+    gap: 1rem !important;
+    width: 100% !important;
+    align-items: center !important;
+    padding: 0.6rem 0 !important;
+    margin-bottom: 1.2rem !important;
   }
   
   .featured-actions {
-    width: 100%;
-    flex-direction: column;
-    gap: 0.6rem;
+    width: 100% !important;
+    flex-direction: row !important;
+    gap: 0.6rem !important;
   }
 
   .btn-featured-buy, .btn-featured-add {
-    width: 100%;
-    padding: 0.7rem 1.2rem;
+    padding: 0.7rem 1rem !important;
+    font-size: 0.78rem !important;
+    width: auto !important;
+    flex: 1 !important;
+  }
+}
+
+@media (max-width: 576px) {
+  .featured-product-card {
+    flex-direction: row !important; /* Force horizontal alignment on mobile! */
+    padding: 0.8rem !important;
+    gap: 0.8rem !important;
+    border-radius: 12px !important;
+    align-items: center !important;
+  }
+  
+  .featured-img-column {
+    flex: 0.75 !important;
+  }
+  
+  .featured-card-img {
+    max-height: 160px !important;
+  }
+  
+  .featured-info-column {
+    flex: 1.25 !important;
+  }
+
+  .featured-category {
+    font-size: 0.58rem !important;
+    letter-spacing: 0.8px !important;
+    margin-bottom: 0.3rem !important;
+  }
+
+  .featured-title {
+    font-size: 1.1rem !important;
+    margin-bottom: 0.4rem !important;
+  }
+
+  .featured-description {
+    font-size: 0.68rem !important;
+    line-height: 1.35 !important;
+    margin-bottom: 0.6rem !important;
+  }
+
+  .featured-price-row {
+    padding: 0.4rem 0 !important;
+    margin-bottom: 0.8rem !important;
+    gap: 0.5rem !important;
+  }
+
+  .featured-price {
+    font-size: 0.95rem !important;
+  }
+
+  .featured-rating {
+    font-size: 0.68rem !important;
+  }
+  
+  .featured-actions {
+    gap: 0.4rem !important;
+  }
+
+  .btn-featured-buy, .btn-featured-add {
+    padding: 0.55rem 0.4rem !important;
+    font-size: 0.68rem !important;
+    border-radius: 20px !important;
+    border-width: 1.5px !important;
+    width: auto !important;
+    flex: 1 !important;
   }
 }
 
@@ -2176,53 +2254,108 @@ footer {
 /* RESPONSIVE CONTACT OVERRIDES */
 @media (max-width: 992px) {
   .contact-grid {
-    flex-direction: column;
-    gap: 3.5rem;
-    padding: 0 2rem;
+    flex-direction: row !important; /* Keep side-by-side exactly like desktop! */
+    gap: 3rem !important;
+    padding: 0 1.5rem !important;
+    align-items: center !important;
+    justify-content: center !important;
   }
   
   .contact-brand-col {
-    justify-content: center;
-    width: 100%;
+    flex: 1 !important;
+    display: flex !important;
+    justify-content: flex-end !important;
+    width: auto !important;
   }
   
   .contact-details-col {
-    width: 100%;
-    align-items: center;
-    text-align: center;
-  }
-  
-  .contact-details-list {
-    align-items: center;
+    flex: 1.1 !important;
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: flex-start !important;
+    text-align: left !important;
+    width: auto !important;
+    gap: 1.5rem !important;
   }
   
   .contact-social-icons {
-    justify-content: center;
+    justify-content: flex-start !important;
+  }
+  
+  .contact-brand-card {
+    width: 220px !important;
+    height: 220px !important;
+    padding: 1rem !important;
+  }
+  
+  .contact-logo-wrapper {
+    width: 180px !important;
+    height: 180px !important;
+  }
+
+  .contact-get-in-touch-title {
+    font-size: 1.8rem !important;
+    margin: 0 !important;
+  }
+  
+  .contact-tagline {
+    font-size: 0.85rem !important;
+  }
+}
+
+@media (max-width: 576px) {
+  .contact-grid {
+    flex-direction: row !important; /* Force side-by-side on mobile! */
+    gap: 1.2rem !important;
+    padding: 0 0.5rem !important;
+  }
+
+  .contact-brand-card {
+    width: 150px !important;
+    height: 150px !important;
+    padding: 0.6rem !important;
+    border-radius: 14px !important;
+  }
+
+  .contact-logo-wrapper {
+    width: 120px !important;
+    height: 120px !important;
+  }
+
+  .contact-tagline {
+    font-size: 0.72rem !important;
+    letter-spacing: 0.1px !important;
+    margin-top: 0.4rem !important;
+  }
+
+  .contact-brand-card-container {
+    gap: 0.4rem !important;
+  }
+
+  .contact-get-in-touch-title {
+    font-size: 1.3rem !important;
+    letter-spacing: -0.3px !important;
+    margin-bottom: 0.6rem !important;
+  }
+
+  .social-circle {
+    width: 32px !important;
+    height: 32px !important;
+  }
+
+  .social-circle svg {
+    width: 14px !important;
+    height: 14px !important;
+  }
+
+  .contact-details-col {
+    gap: 1rem !important;
   }
 }
 
 @media (max-width: 768px) {
   .contact-section {
     padding: 4rem 0 3.5rem 0;
-  }
-  
-  .contact-get-in-touch-title {
-    font-size: 2.1rem;
-  }
-  
-  .contact-brand-card {
-    width: 280px;
-    height: 280px;
-    padding: 2rem;
-  }
-  
-  .contact-logo-wrapper {
-    width: 120px;
-    height: 120px;
-  }
-  
-  .contact-detail-text {
-    font-size: 0.88rem;
   }
   
   .floating-cart-btn {
