@@ -5,16 +5,16 @@
 
 @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&display=swap');
 
-/* CSS VARIABLES - SPECIFIED LUXURY PALETTE */
+/* CSS VARIABLES - LUXURY LIGHT PALETTE */
 :root {
-  --bg-main: #0A0A0A;
-  --bg-sec: #151515;
-  --text-main: #FFFFFF;
-  --text-soft: #BDBDBD;
-  --accent-gold: #C6A769;
-  --accent-hover: #D6B77A;
-  --border-color: #2A2A2A;
-  --glass-bg: rgba(21, 21, 21, 0.7);
+  --bg-main: #FFFFFF; /* Pure White background */
+  --bg-sec: #F9F9F6; /* Soft Alabaster warm secondary background */
+  --text-main: #111111; /* Deep Luxury Black for sharp headings */
+  --text-soft: #333333; /* Premium dark grey/black for body copy */
+  --accent-gold: #C6A769; /* Matte Gold */
+  --accent-hover: #9E8043; /* Rich dark gold for hover */
+  --border-color: #E6E1D5; /* Elegant soft gold-grey borders */
+  --glass-bg: rgba(255, 255, 255, 0.85); /* Alabaster glassmorphism */
   --glass-border: rgba(198, 167, 105, 0.2);
   
   --font-serif: 'Playfair Display', Georgia, serif;
@@ -85,9 +85,9 @@ button {
 
 /* LAYOUT CONTAINER */
 .container {
-  max-width: 1400px;
+  max-width: 1250px;
   margin: 0 auto;
-  padding: 0 4rem;
+  padding: 0 3rem;
 }
 
 @media (max-width: 768px) {
@@ -108,11 +108,7 @@ button {
   100% { transform: translateY(-80px) rotate(360deg); opacity: 0; }
 }
 
-@keyframes goldPulse {
-  0% { box-shadow: 0 0 0 0 rgba(198, 167, 105, 0.4); }
-  70% { box-shadow: 0 0 0 10px rgba(198, 167, 105, 0); }
-  100% { box-shadow: 0 0 0 0 rgba(198, 167, 105, 0); }
-}
+
 
 .animate-fade-in {
   animation: fadeIn 1.2s cubic-bezier(0.25, 1, 0.5, 1) forwards;
@@ -125,40 +121,130 @@ header {
   left: 0;
   width: 100%;
   z-index: 1000;
-  background: var(--glass-bg);
-  backdrop-filter: blur(15px);
-  -webkit-backdrop-filter: blur(15px);
-  border-bottom: 1px solid var(--border-color);
+  background: var(--accent-gold); /* Matte Gold at top */
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.15);
   transition: var(--transition);
 }
 
 header.scrolled {
   padding: 0.2rem 0;
-  border-bottom: 1px solid rgba(198, 167, 105, 0.3);
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+  background: rgba(198, 167, 105, 0.9); /* Glassmorphic Matte Gold when scrolling */
+  backdrop-filter: blur(15px);
+  -webkit-backdrop-filter: blur(15px);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.2);
 }
 
 header.scrolled .nav-container {
-  height: 85px;
+  height: 80px;
 }
 
 header.scrolled .brand-logo-img {
-  height: 60px;
+  height: 70px;
 }
 
 .nav-container {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  height: 115px;
+  height: 110px;
   width: 100%;
   transition: var(--transition);
 }
 
-.nav-left {
+.nav-search-wrapper {
   flex: 1;
   display: flex;
-  justify-content: flex-start;
+  align-items: center;
+  gap: 1rem;
+  position: relative;
+}
+
+.nav-search-btn {
+  color: #FFFFFF; /* Pure White icon for high contrast on Matte Gold */
+  font-size: 1.3rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transition: var(--transition-fast);
+}
+
+.nav-search-btn:hover {
+  color: rgba(255, 255, 255, 0.8);
+  transform: scale(1.05);
+}
+
+.search-input-container {
+  width: 0;
+  opacity: 0;
+  overflow: hidden;
+  transition: all 0.5s cubic-bezier(0.25, 1, 0.5, 1);
+  display: flex;
+  align-items: center;
+}
+
+.search-input-container.open {
+  width: 280px; /* Spacious width for the pill */
+  opacity: 1;
+}
+
+.pill-search-box {
+  position: relative;
+  display: flex;
+  align-items: center;
+  width: 100%;
+}
+
+.search-field {
+  width: 100%;
+  background: #FFFFFF; /* Pure White background */
+  border: none;
+  border-radius: 40px; /* Fully rounded pill corners! */
+  color: #333333; /* Dark slate text */
+  padding: 0.7rem 2.6rem 0.7rem 2.6rem; /* Left padding for search, right for close icon */
+  font-family: var(--font-sans);
+  font-size: 0.85rem;
+  letter-spacing: 0.5px;
+  transition: var(--transition-fast);
+}
+
+.search-field::placeholder {
+  color: #888888; /* Soft grey placeholder */
+  font-style: normal;
+}
+
+.search-field:focus {
+  outline: none;
+  border: 1px solid var(--accent-gold);
+}
+
+.pill-search-icon {
+  position: absolute;
+  left: 14px;
+  display: flex;
+  align-items: center;
+  pointer-events: none;
+  z-index: 5;
+}
+
+.pill-close-btn {
+  position: absolute;
+  right: 14px;
+  display: flex;
+  align-items: center;
+  color: #777777;
+  z-index: 5;
+  transition: var(--transition-fast);
+}
+
+.pill-close-btn:hover {
+  color: #333333;
+  transform: scale(1.1);
+}
+
+.nav-right-placeholder {
+  flex: 1;
 }
 
 .logo-center {
@@ -168,7 +254,7 @@ header.scrolled .brand-logo-img {
 }
 
 .brand-logo-img {
-  height: 82px;
+  height: 100px;
   width: auto;
   object-fit: contain;
   transition: var(--transition);
@@ -275,14 +361,13 @@ header.scrolled .brand-logo-img {
 /* LUXURY HERO SECTION */
 .hero {
   position: relative;
-  height: 100vh;
-  min-height: 700px;
+  height: calc(100vh - 110px);
+  min-height: 520px;
   width: 100%;
   display: flex;
   align-items: center;
   overflow: hidden;
-  background: linear-gradient(rgba(10, 10, 10, 0.4), rgba(10, 10, 10, 0.95)), 
-              url('assets/hero_background.png') no-repeat center center/cover;
+  background: url('assets/hero_background.png') no-repeat center center/cover;
 }
 
 .hero-overlay {
@@ -311,20 +396,22 @@ header.scrolled .brand-logo-img {
 }
 
 .hero-title {
-  font-size: 4.8rem;
+  font-size: 4rem;
   line-height: 1.15;
-  margin-bottom: 2rem;
+  margin-bottom: 1.5rem;
+  color: #FFFFFF; /* Pure White for high-contrast on dark marble background */
 }
 
 .hero-title span {
   font-style: italic;
   font-weight: 400;
+  color: var(--accent-gold); /* Gilded Gold highlight word */
 }
 
 .hero-description {
-  font-size: 1.05rem;
-  color: var(--text-soft);
-  margin-bottom: 3rem;
+  font-size: 1rem;
+  color: #E6E1D5; /* Premium warm white contrast on dark background */
+  margin-bottom: 2.2rem;
   max-width: 600px;
   font-weight: 300;
 }
@@ -333,7 +420,7 @@ header.scrolled .brand-logo-img {
   display: inline-block;
   padding: 1.2rem 2.8rem;
   border: 1px solid var(--accent-gold);
-  color: var(--text-main);
+  color: #FFFFFF; /* High-contrast white text */
   font-size: 0.85rem;
   text-transform: uppercase;
   letter-spacing: 3px;
@@ -342,7 +429,6 @@ header.scrolled .brand-logo-img {
   overflow: hidden;
   background: transparent;
   transition: var(--transition);
-  animation: goldPulse 2s infinite;
 }
 
 .btn-luxury::before {
@@ -364,12 +450,11 @@ header.scrolled .brand-logo-img {
   background: var(--accent-gold);
   color: var(--bg-main);
   border-color: var(--accent-gold);
-  box-shadow: 0 0 20px rgba(198, 167, 105, 0.4);
 }
 
 /* INTERACTIVE SCENT PROFILE EXPLORER */
 .scent-explorer {
-  padding: 8rem 0;
+  padding: 4.5rem 0;
   background: var(--bg-main);
   border-top: 1px solid var(--border-color);
   position: relative;
@@ -431,7 +516,6 @@ header.scrolled .brand-logo-img {
   justify-content: center;
   align-items: center;
   text-align: center;
-  box-shadow: 0 0 30px rgba(198, 167, 105, 0.15);
   z-index: 5;
 }
 
@@ -466,7 +550,6 @@ header.scrolled .brand-logo-img {
 
 .scent-node:hover, .scent-node.active {
   border-color: var(--accent-gold);
-  box-shadow: 0 0 15px rgba(198, 167, 105, 0.4);
   color: var(--accent-gold);
   transform: scale(1.1);
 }
@@ -557,15 +640,15 @@ header.scrolled .brand-logo-img {
 
 /* CURATED COLLECTIONS GRID */
 .collections {
-  padding: 8rem 0;
+  padding: 4.5rem 0;
   background: var(--bg-sec);
   border-top: 1px solid var(--border-color);
 }
 
 .product-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-  gap: 3rem;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 2rem;
 }
 
 .product-card {
@@ -581,7 +664,7 @@ header.scrolled .brand-logo-img {
 .product-card:hover {
   transform: translateY(-10px);
   border-color: rgba(198, 167, 105, 0.4);
-  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6);
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.05);
 }
 
 .product-img-wrapper {
@@ -678,7 +761,7 @@ header.scrolled .brand-logo-img {
 
 /* BRAND PHILOSOPHY & STORY */
 .philosophy {
-  padding: 8rem 0;
+  padding: 4.5rem 0;
   background: var(--bg-main);
   border-top: 1px solid var(--border-color);
   overflow: hidden;
@@ -687,7 +770,7 @@ header.scrolled .brand-logo-img {
 .philosophy-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 6rem;
+  gap: 3.5rem;
   align-items: center;
 }
 
@@ -709,9 +792,11 @@ header.scrolled .brand-logo-img {
 
 .philosophy-img {
   width: 100%;
+  max-height: 480px;
+  object-fit: cover;
   position: relative;
   z-index: 2;
-  box-shadow: 0 20px 40px rgba(0,0,0,0.6);
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.05);
   border-radius: 2px;
 }
 
@@ -754,7 +839,7 @@ header.scrolled .brand-logo-img {
   height: 100vh;
   background: var(--bg-sec);
   border-left: 1px solid var(--border-color);
-  box-shadow: -10px 0 40px rgba(0, 0, 0, 0.8);
+  box-shadow: -5px 0 15px rgba(0, 0, 0, 0.05);
   z-index: 2000;
   display: flex;
   flex-direction: column;
@@ -925,7 +1010,6 @@ header.scrolled .brand-logo-img {
 
 .btn-checkout:hover {
   background: var(--accent-hover);
-  box-shadow: 0 0 15px rgba(198, 167, 105, 0.4);
 }
 
 /* OVERLAY BACKDROP FOR DRAWER */
@@ -951,7 +1035,7 @@ header.scrolled .brand-logo-img {
 
 /* PREMIUM NEWSLETTER SECTION */
 .newsletter {
-  padding: 8rem 0;
+  padding: 4.5rem 0;
   background: var(--bg-main);
   border-top: 1px solid var(--border-color);
   text-align: center;
@@ -1119,4 +1203,40 @@ footer {
     flex-direction: column;
     text-align: center;
   }
+}
+
+/* FLOATING LUXURY CART BUTTON */
+.floating-cart-btn {
+  position: fixed;
+  bottom: 2.5rem;
+  right: 2.5rem;
+  width: 65px;
+  height: 65px;
+  border-radius: 50%;
+  background: var(--accent-gold);
+  border: 1px solid var(--accent-gold);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1400;
+  transition: var(--transition);
+}
+
+.floating-cart-btn:hover {
+  background: var(--accent-hover);
+  transform: scale(1.08);
+}
+
+.floating-cart-btn .cart-count {
+  position: absolute;
+  top: 3px;
+  right: 3px;
+  background: var(--bg-main);
+  color: var(--text-main);
+  font-size: 0.75rem;
+  font-weight: 600;
+  padding: 2px 6px;
+  border-radius: 50%;
+  border: 1px solid var(--accent-gold);
 }

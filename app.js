@@ -209,6 +209,57 @@ document.addEventListener('DOMContentLoaded', () => {
     updateCartUI();
   }
 
+  // --- SLIDING SEARCH INTERACTION ---
+  const btnSearchToggle = document.getElementById('btn-search-toggle');
+  const searchContainer = document.getElementById('search-container');
+  const searchField = document.querySelector('.search-field');
+  const btnSearchClose = document.getElementById('btn-search-close');
+
+  function openSearch() {
+    searchContainer.classList.add('open');
+    if (btnSearchToggle) {
+      btnSearchToggle.style.opacity = '0';
+      btnSearchToggle.style.pointerEvents = 'none';
+    }
+    setTimeout(() => {
+      searchField.focus();
+    }, 100);
+  }
+
+  function closeSearch() {
+    searchContainer.classList.remove('open');
+    if (btnSearchToggle) {
+      btnSearchToggle.style.opacity = '1';
+      btnSearchToggle.style.pointerEvents = 'auto';
+    }
+  }
+
+  if (btnSearchToggle) {
+    btnSearchToggle.addEventListener('click', (e) => {
+      e.stopPropagation();
+      openSearch();
+    });
+  }
+
+  if (btnSearchClose) {
+    btnSearchClose.addEventListener('click', (e) => {
+      e.stopPropagation();
+      closeSearch();
+    });
+  }
+
+  if (searchContainer) {
+    searchContainer.addEventListener('click', (e) => {
+      e.stopPropagation();
+    });
+  }
+
+  document.addEventListener('click', () => {
+    if (searchContainer && searchContainer.classList.contains('open')) {
+      closeSearch();
+    }
+  });
+
   // --- NEWSLETTER SIGN-UP FORM ---
   const newsForm = document.getElementById('newsletter-form');
   const newsInput = document.getElementById('newsletter-input');
