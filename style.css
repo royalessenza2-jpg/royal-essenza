@@ -151,6 +151,7 @@ header.scrolled .brand-logo-img {
 }
 
 .nav-container {
+  position: relative; /* CRITICAL for absolute centering of logo */
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -224,8 +225,17 @@ header.scrolled .brand-logo-img {
   }
   
   .search-input-container.open {
-    width: 280px; /* Standard elegant mobile width */
+    width: 180px; /* Elegant, compact width to not overlap the centered logo on mobile! */
     opacity: 1;
+  }
+  
+  .pill-search-box {
+    width: 180px; /* CRITICAL: Setting a fixed width on mobile prevents text input resizing reflows, ensuring buttery-smooth 60fps sliding! */
+  }
+  
+  /* Wait 0.5s for the slide transition to complete first, then play the glow! */
+  .search-input-container.open .search-border-rect {
+    animation: drawBorderGlow 1.4s cubic-bezier(0.25, 1, 0.5, 1) 0.5s forwards;
   }
   
   .pill-close-btn {
@@ -284,9 +294,8 @@ header.scrolled .brand-logo-img {
   transition: stroke 0.3s ease;
 }
 
-/* Trigger animation when input is focused, or when container gets .open class */
-.search-field:focus ~ .search-border-svg .search-border-rect,
-.search-input-container.open .search-border-rect {
+/* Trigger animation instantly when input is focused */
+.search-field:focus ~ .search-border-svg .search-border-rect {
   animation: drawBorderGlow 1.4s cubic-bezier(0.25, 1, 0.5, 1) forwards;
 }
 
@@ -339,6 +348,11 @@ header.scrolled .brand-logo-img {
 }
 
 .logo-center {
+  position: absolute !important; /* Keeps the logo perfectly centered on all screen sizes! */
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 10;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -1377,8 +1391,11 @@ footer {
 }
 
 .new-card {
-  background: #FAF8F5; /* Exact warm cream off-white background from Ajmal */
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='100' viewBox='0 0 100 100'%3E%3Cpath d='M0 0 L50 50 L100 0 M50 50 L50 100' fill='none' stroke='rgba(198,167,105,0.04)' stroke-width='0.5'/%3E%3Ccircle cx='50' cy='50' r='8' fill='none' stroke='rgba(198,167,105,0.04)' stroke-width='0.5'/%3E%3C/svg%3E"); /* Arabesque pattern */
+  background: #EDEDE8; /* Soft, premium warm-toned gray to create subtle luxury contrast */
+  background-image: url("assets/design.png"); /* Custom gold arabesque geometric lines design */
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
   border: 1px solid var(--border-color);
   border-radius: 12px;
   overflow: visible; /* CRITICAL: Allows perfume bottles to pop out of top border! */
@@ -1527,4 +1544,78 @@ footer {
 .btn-new-add-to-cart:hover {
   background: var(--accent-hover);
   border-color: var(--accent-hover);
+}
+
+/* MOBILE PRODUCT CAROUSEL STYLES */
+.new-carousel-btn {
+  display: none; /* Hidden on desktop by default */
+}
+
+@media (max-width: 768px) {
+  .new-carousel-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+    width: 100%;
+    margin-top: 1.5rem;
+  }
+
+  .new-arrivals-grid {
+    display: flex !important;
+    flex-direction: row !important;
+    overflow-x: auto !important;
+    scroll-snap-type: x mandatory !important;
+    scroll-behavior: smooth !important;
+    gap: 0 !important;
+    width: 100% !important;
+    scrollbar-width: none !important; /* Firefox hide scrollbar */
+    padding: 0 5px !important;
+    box-sizing: border-box !important;
+  }
+
+  .new-arrivals-grid::-webkit-scrollbar {
+    display: none; /* Chrome/Safari hide scrollbar */
+  }
+
+  .new-card {
+    flex: 0 0 100% !important;
+    width: 100% !important;
+    scroll-snap-align: center !important;
+    margin-top: 50px !important;
+    margin-bottom: 10px !important;
+    box-sizing: border-box !important;
+  }
+
+  .new-carousel-btn {
+    display: flex !important;
+    position: absolute;
+    top: calc(50% + 20px);
+    transform: translateY(-50%);
+    z-index: 20;
+    background: rgba(255, 255, 255, 0.95);
+    border: 1px solid var(--border-color);
+    color: var(--accent-gold);
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    transition: var(--transition-fast);
+  }
+
+  .new-carousel-btn:hover {
+    background: #FFFFFF;
+    color: var(--accent-hover);
+    transform: translateY(-50%) scale(1.05);
+  }
+
+  .new-carousel-btn.btn-prev {
+    left: -10px; /* Float nicely on the left border */
+  }
+
+  .new-carousel-btn.btn-next {
+    right: -10px; /* Float nicely on the right border */
+  }
 }

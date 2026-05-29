@@ -328,4 +328,21 @@ document.addEventListener('DOMContentLoaded', () => {
   if (slides.length > 0) {
     setInterval(nextSlide, slideInterval);
   }
+
+  // --- MOBILE PRODUCT CAROUSEL CONTROLLER ---
+  const grid = document.querySelector('.new-arrivals-grid');
+  const prevBtn = document.querySelector('.btn-prev');
+  const nextBtn = document.querySelector('.btn-next');
+
+  if (grid && prevBtn && nextBtn) {
+    nextBtn.addEventListener('click', () => {
+      const cardWidth = grid.querySelector('.new-card').offsetWidth;
+      grid.scrollBy({ left: cardWidth, behavior: 'smooth' });
+    });
+
+    prevBtn.addEventListener('click', () => {
+      const cardWidth = grid.querySelector('.new-card').offsetWidth;
+      grid.scrollBy({ left: -cardWidth, behavior: 'smooth' });
+    });
+  }
 });
