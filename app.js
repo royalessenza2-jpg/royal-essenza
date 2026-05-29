@@ -314,20 +314,114 @@ document.addEventListener('DOMContentLoaded', () => {
     return re.test(email);
   }
 
-  // --- HERO SLIDESHOW ROTATION ---
-  const slides = document.querySelectorAll('.hero-slide');
-  let currentSlide = 0;
-  const slideInterval = 5000; // Rotate every 5 seconds
+  // --- PREMIUM HORIZONTAL SLIDING HERO CAROUSEL ---
+  const heroSlidesWrapper = document.querySelector('.hero-slides');
+  const heroSlides = document.querySelectorAll('.hero-slide');
+  const heroPrevBtn = document.querySelector('.hero-nav-btn.btn-prev');
+  const heroNextBtn = document.querySelector('.hero-nav-btn.btn-next');
+  const heroIndicators = document.querySelectorAll('.hero-indicator');
 
-  function nextSlide() {
-    if (slides.length === 0) return;
-    slides[currentSlide].classList.remove('active');
-    currentSlide = (currentSlide + 1) % slides.length;
-    slides[currentSlide].classList.add('active');
-  }
+  if (heroSlidesWrapper && heroSlides.length > 0) {
+    let currentHeroSlide = 0;
+    const totalHeroSlides = heroSlides.length;
+    const heroSlideInterval = 5000; // Rotate every 5 seconds
+    let rotationTimer;
 
-  if (slides.length > 0) {
-    setInterval(nextSlide, slideInterval);
+    function goToHeroSlide(index) {
+      currentHeroSlide = index;
+      
+      // Calculate horizontal translation percent
+      const translatePercent = -(index * 100) / totalHeroSlides;
+      heroSlidesWrapper.style.transform = `translateX(${translatePercent}%)`;
+
+      // Update indicators active state
+      heroIndicators.forEach((indicator, idx) => {
+        if (idx === index) {
+          indicator.classList.add('active');
+        } else {
+          indicator.classList.remove('active');
+        }
+      });
+    }
+
+    function nextHeroSlide() {
+      const nextIndex = (currentHeroSlide + 1) % totalHeroSlides;
+      goToHeroSlide(nextIndex);
+    }
+
+    function prevHeroSlide() {
+      const prevIndex = (currentHeroSlide - 1 + totalHeroSlides) % totalHeroSlides;
+      goToHeroSlide(prevIndex);
+    }
+
+    // Auto Rotation Management
+    function startRotation() {
+      stopRotation();
+      rotationTimer = setInterval(nextHeroSlide, heroSlideInterval);
+    }
+
+    function stopRotation() {
+      if (rotationTimer) {
+        clearInterval(rotationTimer);
+      }
+    }
+
+    function handleManualInteraction(action) {
+      action();
+      startRotation(); // Reset auto rotation interval timer
+    }
+
+    // Click Handlers
+    if (heroNextBtn) {
+      heroNextBtn.addEventListener('click', () => {
+        handleManualInteraction(nextHeroSlide);
+      });
+    }
+
+    if (heroPrevBtn) {
+      heroPrevBtn.addEventListener('click', () => {
+        handleManualInteraction(prevHeroSlide);
+      });
+    }
+
+    heroIndicators.forEach((indicator) => {
+      indicator.addEventListener('click', () => {
+        const slideIndex = parseInt(indicator.getAttribute('data-slide'), 10);
+        handleManualInteraction(() => {
+          goToHeroSlide(slideIndex);
+        });
+      });
+    });
+
+    // Touch Swipe Gesture Support for Hero Section
+    let heroTouchStartX = 0;
+    let heroTouchEndX = 0;
+    const heroSectionEl = document.querySelector('.hero');
+
+    if (heroSectionEl) {
+      heroSectionEl.addEventListener('touchstart', (e) => {
+        heroTouchStartX = e.changedTouches[0].screenX;
+      }, { passive: true });
+
+      heroSectionEl.addEventListener('touchend', (e) => {
+        heroTouchEndX = e.changedTouches[0].screenX;
+        handleHeroSwipe();
+      }, { passive: true });
+    }
+
+    function handleHeroSwipe() {
+      const swipeDistance = heroTouchEndX - heroTouchStartX;
+      if (swipeDistance < -50) {
+        // Swipe Left -> Next slide
+        if (heroNextBtn) heroNextBtn.click();
+      } else if (swipeDistance > 50) {
+        // Swipe Right -> Prev slide
+        if (heroPrevBtn) heroPrevBtn.click();
+      }
+    }
+
+    // Initialize auto rotation
+    startRotation();
   }
 
   // --- MOBILE CREATIVE 3D COVERFLOW SLIDER CONTROLLER ---
@@ -426,4 +520,174 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     }
   }
+
+  // --- BESPOKE CONTACT FORM HANDLER ---
+  const contactForm = document.getElementById('bespoke-contact-form');
+  const contactMsg = document.getElementById('contact-form-message');
+
+  if (contactForm && contactMsg) {
+    contactForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+      contactMsg.textContent = "Submitting Inquiry...";
+      contactMsg.className = "contact-form-message success";
+
+      setTimeout(() => {
+        contactMsg.textContent = "Tashakkur! Your consultation inquiry has been submitted. Our concierge will contact you shortly.";
+        contactMsg.className = "contact-form-message success";
+        contactForm.reset();
+        
+        // Soft clear success text after 6 seconds
+        setTimeout(() => {
+          contactMsg.textContent = "";
+          contactMsg.className = "contact-form-message";
+        }, 6000);
+      }, 1000);
+    });
+  }
+
+  // --- MOBILE NAVIGATION DRAWER SYSTEM ---
+  const menuDrawer = document.getElementById('mobile-menu-drawer');
+  const menuOverlay = document.getElementById('menu-overlay');
+  const btnOpenMenu = document.getElementById('btn-menu-open');
+  const btnCloseMenu = document.getElementById('btn-menu-close');
+  const menuLinks = document.querySelectorAll('.menu-link');
+
+  function openMenu() {
+    if (menuDrawer) menuDrawer.classList.add('open');
+    if (menuOverlay) {
+      menuOverlay.style.display = 'block';
+      setTimeout(() => {
+        menuOverlay.classList.add('open');
+      }, 10);
+    }
+  }
+
+  function closeMenu() {
+    if (menuDrawer) menuDrawer.classList.remove('open');
+    if (menuOverlay) {
+      menuOverlay.classList.remove('open');
+      setTimeout(() => {
+        menuOverlay.style.display = 'none';
+      }, 500);
+    }
+  }
+
+  if (btnOpenMenu) btnOpenMenu.addEventListener('click', openMenu);
+  if (btnCloseMenu) btnCloseMenu.addEventListener('click', closeMenu);
+  if (menuOverlay) menuOverlay.addEventListener('click', closeMenu);
+
+  // Close mobile drawer on any page link clicks
+  menuLinks.forEach(link => {
+    link.addEventListener('click', () => {
+      closeMenu();
+    });
+  });
+
+  // --- LUXURY TRACK ORDER DRAWER SYSTEM ---
+  const trackDrawer = document.getElementById('track-drawer');
+  const trackOverlay = document.getElementById('track-overlay');
+  const btnCloseTrack = document.getElementById('btn-track-close');
+  const trackTriggers = document.querySelectorAll('.nav-track-trigger, .menu-track-trigger');
+  
+  const btnTrackSubmit = document.getElementById('btn-track-submit');
+  const trackIdInput = document.getElementById('tracking-id-input');
+  const trackLoader = document.getElementById('track-loader');
+  const trackResults = document.getElementById('tracking-results');
+
+  function openTrack(e) {
+    if (e) e.preventDefault();
+    
+    // Close mobile menu if it is currently open
+    closeMenu();
+    
+    if (trackDrawer) trackDrawer.classList.add('open');
+    if (trackOverlay) {
+      trackOverlay.style.display = 'block';
+      setTimeout(() => {
+        trackOverlay.classList.add('open');
+      }, 10);
+    }
+  }
+
+  function closeTrack() {
+    if (trackDrawer) trackDrawer.classList.remove('open');
+    if (trackOverlay) {
+      trackOverlay.classList.remove('open');
+      setTimeout(() => {
+        trackOverlay.style.display = 'none';
+      }, 500);
+    }
+    // Clean up forms when closing
+    if (trackIdInput) trackIdInput.value = '';
+    if (trackLoader) trackLoader.style.display = 'none';
+    if (trackResults) trackResults.style.display = 'none';
+  }
+
+  trackTriggers.forEach(trigger => {
+    trigger.addEventListener('click', openTrack);
+  });
+
+  if (btnCloseTrack) btnCloseTrack.addEventListener('click', closeTrack);
+  if (trackOverlay) trackOverlay.addEventListener('click', closeTrack);
+
+  // Handle Tracking ID simulated search
+  if (btnTrackSubmit && trackIdInput) {
+    btnTrackSubmit.addEventListener('click', () => {
+      const trackingVal = trackIdInput.value.trim();
+      
+      if (!trackingVal) {
+        trackIdInput.style.borderColor = '#ff4a4a';
+        setTimeout(() => {
+          trackIdInput.style.borderColor = 'var(--border-color)';
+        }, 1500);
+        return;
+      }
+
+      // Hide previous results and show loader
+      if (trackResults) trackResults.style.display = 'none';
+      if (trackLoader) trackLoader.style.display = 'flex';
+
+      // Simulate a luxury network concierges check
+      setTimeout(() => {
+        if (trackLoader) trackLoader.style.display = 'none';
+        if (trackResults) {
+          trackResults.style.display = 'block';
+          
+          // Animate timeline dots sequentially for ultimate visual premium touch!
+          const steps = trackResults.querySelectorAll('.timeline-step');
+          steps.forEach((step, index) => {
+            step.style.opacity = '0';
+            step.style.transform = 'translateY(15px)';
+            step.style.transition = 'opacity 0.4s ease, transform 0.4s ease';
+            
+            setTimeout(() => {
+              step.style.opacity = '1';
+              step.style.transform = 'translateY(0)';
+            }, index * 200);
+          });
+        }
+      }, 1200);
+    });
+
+    // Support tracking trigger on enter key
+    trackIdInput.addEventListener('keypress', (e) => {
+      if (e.key === 'Enter') {
+        btnTrackSubmit.click();
+      }
+    });
+  }
+
+  // --- AUTOMATICALLY HIDE EMPTY CONTACT DETAILS ---
+  const contactDetailItems = document.querySelectorAll('.contact-detail-item');
+  contactDetailItems.forEach(item => {
+    const textElem = item.querySelector('.contact-detail-text');
+    if (textElem) {
+      const textVal = textElem.textContent.trim();
+      if (textVal === '') {
+        item.style.display = 'none';
+      } else {
+        item.style.display = 'flex';
+      }
+    }
+  });
 });
