@@ -330,7 +330,7 @@ document.addEventListener('DOMContentLoaded', () => {
     setInterval(nextSlide, slideInterval);
   }
 
-  // --- MOBILE STACKED 3D CARD SLIDER CONTROLLER ---
+  // --- MOBILE CREATIVE 3D COVERFLOW SLIDER CONTROLLER ---
   const cards = document.querySelectorAll('.new-card');
   const prevBtn = document.querySelector('.btn-prev');
   const nextBtn = document.querySelector('.btn-next');
@@ -342,16 +342,16 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function updateCardStack() {
       cards.forEach((card, idx) => {
-        // Clean up classes
-        card.classList.remove('active-card', 'next-card', 'back-card');
+        // Reset Coverflow layout classes
+        card.classList.remove('active-card', 'prev-card', 'next-card');
 
-        // Determine relative position in infinite loop
+        // Mathematically assign coverflow positions in infinite loop
         if (idx === currentIndex) {
           card.classList.add('active-card');
+        } else if (idx === (currentIndex - 1 + totalCards) % totalCards) {
+          card.classList.add('prev-card');
         } else if (idx === (currentIndex + 1) % totalCards) {
           card.classList.add('next-card');
-        } else {
-          card.classList.add('back-card');
         }
       });
     }
@@ -359,46 +359,44 @@ document.addEventListener('DOMContentLoaded', () => {
     // Initialize stack
     updateCardStack();
 
-    nextBtn.addEventListener('click', () => {
+    // Debounced transition triggers for ultra-smooth 60fps interaction
+    function rotateNext() {
       if (isAnimating) return;
       isAnimating = true;
-
-      // 1. Slide out active card to left in smooth slow-mo
-      const activeCard = cards[currentIndex];
-      activeCard.classList.add('slide-out-left');
-
-      // 2. Shift active index (infinitely loops through 3 cards!)
       currentIndex = (currentIndex + 1) % totalCards;
-
-      // 3. Update stack styling (which animates the next card rising up)
       updateCardStack();
+      setTimeout(() => { isAnimating = false; }, 400);
+    }
 
-      // 4. After transition, clean up the slide-out card so it sits at the back
-      setTimeout(() => {
-        activeCard.classList.remove('slide-out-left');
-        isAnimating = false;
-      }, 650); // 650ms matches our CSS transition speed
-    });
-
-    prevBtn.addEventListener('click', () => {
+    function rotatePrev() {
       if (isAnimating) return;
       isAnimating = true;
-
-      // To slide previous: we decrement index
-      const targetIndex = (currentIndex - 1 + totalCards) % totalCards;
-      const targetCard = cards[targetIndex];
-
-      // Slide in smoothly by letting it sweep from the left
-      targetCard.classList.add('slide-out-left');
-      
-      // Update index
-      currentIndex = targetIndex;
+      currentIndex = (currentIndex - 1 + totalCards) % totalCards;
       updateCardStack();
+      setTimeout(() => { isAnimating = false; }, 400);
+    }
 
-      setTimeout(() => {
-        targetCard.classList.remove('slide-out-left');
-        isAnimating = false;
-      }, 650);
+    nextBtn.addEventListener('click', rotateNext);
+    prevBtn.addEventListener('click', rotatePrev);
+
+    // Tactile direct card clicks (clicking on the left/right cards rotates the carousel!)
+    cards.forEach((card) => {
+      card.addEventListener('click', (e) => {
+        if (window.innerWidth > 768) return; // Desktop uses grid list, click does nothing
+        
+        // If user clicks interactive buttons inside the card, don't rotate the carousel!
+        if (e.target.closest('.new-card-actions') || e.target.closest('.new-card-wishlist')) {
+          return;
+        }
+
+        if (card.classList.contains('prev-card')) {
+          e.preventDefault();
+          rotatePrev();
+        } else if (card.classList.contains('next-card')) {
+          e.preventDefault();
+          rotateNext();
+        }
+      });
     });
 
     // Touch Swipe Gesture Support for Mobile
