@@ -235,9 +235,10 @@ document.addEventListener('DOMContentLoaded', () => {
       btnSearchToggle.style.opacity = '0';
       btnSearchToggle.style.pointerEvents = 'none';
     }
+    // Focus the input and open mobile keyboard only AFTER the 2s glowing animation completes!
     setTimeout(() => {
       searchField.focus();
-    }, 100);
+    }, 2000);
   }
 
   function closeSearch() {
@@ -329,20 +330,102 @@ document.addEventListener('DOMContentLoaded', () => {
     setInterval(nextSlide, slideInterval);
   }
 
-  // --- MOBILE PRODUCT CAROUSEL CONTROLLER ---
-  const grid = document.querySelector('.new-arrivals-grid');
+  // --- MOBILE STACKED 3D CARD SLIDER CONTROLLER ---
+  const cards = document.querySelectorAll('.new-card');
   const prevBtn = document.querySelector('.btn-prev');
   const nextBtn = document.querySelector('.btn-next');
 
-  if (grid && prevBtn && nextBtn) {
+  if (cards.length > 0 && prevBtn && nextBtn) {
+    let currentIndex = 0;
+    const totalCards = cards.length;
+    let isAnimating = false;
+
+    function updateCardStack() {
+      cards.forEach((card, idx) => {
+        // Clean up classes
+        card.classList.remove('active-card', 'next-card', 'back-card');
+
+        // Determine relative position in infinite loop
+        if (idx === currentIndex) {
+          card.classList.add('active-card');
+        } else if (idx === (currentIndex + 1) % totalCards) {
+          card.classList.add('next-card');
+        } else {
+          card.classList.add('back-card');
+        }
+      });
+    }
+
+    // Initialize stack
+    updateCardStack();
+
     nextBtn.addEventListener('click', () => {
-      const cardWidth = grid.querySelector('.new-card').offsetWidth;
-      grid.scrollBy({ left: cardWidth, behavior: 'smooth' });
+      if (isAnimating) return;
+      isAnimating = true;
+
+      // 1. Slide out active card to left in smooth slow-mo
+      const activeCard = cards[currentIndex];
+      activeCard.classList.add('slide-out-left');
+
+      // 2. Shift active index (infinitely loops through 3 cards!)
+      currentIndex = (currentIndex + 1) % totalCards;
+
+      // 3. Update stack styling (which animates the next card rising up)
+      updateCardStack();
+
+      // 4. After transition, clean up the slide-out card so it sits at the back
+      setTimeout(() => {
+        activeCard.classList.remove('slide-out-left');
+        isAnimating = false;
+      }, 650); // 650ms matches our CSS transition speed
     });
 
     prevBtn.addEventListener('click', () => {
-      const cardWidth = grid.querySelector('.new-card').offsetWidth;
-      grid.scrollBy({ left: -cardWidth, behavior: 'smooth' });
+      if (isAnimating) return;
+      isAnimating = true;
+
+      // To slide previous: we decrement index
+      const targetIndex = (currentIndex - 1 + totalCards) % totalCards;
+      const targetCard = cards[targetIndex];
+
+      // Slide in smoothly by letting it sweep from the left
+      targetCard.classList.add('slide-out-left');
+      
+      // Update index
+      currentIndex = targetIndex;
+      updateCardStack();
+
+      setTimeout(() => {
+        targetCard.classList.remove('slide-out-left');
+        isAnimating = false;
+      }, 650);
     });
+
+    // Touch Swipe Gesture Support for Mobile
+    let touchStartX = 0;
+    let touchEndX = 0;
+    const gridWrapper = document.querySelector('.new-arrivals-grid');
+
+    if (gridWrapper) {
+      gridWrapper.addEventListener('touchstart', (e) => {
+        touchStartX = e.changedTouches[0].screenX;
+      }, { passive: true });
+
+      gridWrapper.addEventListener('touchend', (e) => {
+        touchEndX = e.changedTouches[0].screenX;
+        handleSwipe();
+      }, { passive: true });
+    }
+
+    function handleSwipe() {
+      const swipeDistance = touchEndX - touchStartX;
+      if (swipeDistance < -50) {
+        // Swipe Left -> Next card
+        nextBtn.click();
+      } else if (swipeDistance > 50) {
+        // Swipe Right -> Prev card
+        prevBtn.click();
+      }
+    }
   }
 });

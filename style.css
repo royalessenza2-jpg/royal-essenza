@@ -216,12 +216,18 @@ header.scrolled .brand-logo-img {
   /* On mobile and tablet, start collapsed and animate when .open class is added */
   .nav-search-btn {
     display: flex !important;
+    padding-left: 5px; /* Alignment baseline */
   }
   
   .search-input-container {
+    position: absolute !important; /* Positions absolutely over the toggle button */
+    left: -5px !important; /* Perfect overlap alignment */
+    top: 50% !important;
+    transform: translateY(-50%) !important;
     width: 0;
     opacity: 0;
     overflow: hidden;
+    z-index: 15;
   }
   
   .search-input-container.open {
@@ -233,9 +239,9 @@ header.scrolled .brand-logo-img {
     width: 180px; /* CRITICAL: Setting a fixed width on mobile prevents text input resizing reflows, ensuring buttery-smooth 60fps sliding! */
   }
   
-  /* Wait 0.5s for the slide transition to complete first, then play the glow! */
+  /* Wait 0.5s for the slide transition to complete first, then play the glow slowly in 2.0s! */
   .search-input-container.open .search-border-rect {
-    animation: drawBorderGlow 1.4s cubic-bezier(0.25, 1, 0.5, 1) 0.5s forwards;
+    animation: drawBorderGlow 2.0s cubic-bezier(0.25, 1, 0.5, 1) 0.5s forwards;
   }
   
   .pill-close-btn {
@@ -1393,7 +1399,7 @@ footer {
 .new-card {
   background: #EDEDE8; /* Soft, premium warm-toned gray to create subtle luxury contrast */
   background-image: url("assets/design.png"); /* Custom gold arabesque geometric lines design */
-  background-size: cover;
+  background-size: 100% 100%; /* Stretches the lines design perfectly across the card so it is 100% visible on all screen sizes! */
   background-position: center;
   background-repeat: no-repeat;
   border: 1px solid var(--border-color);
@@ -1557,41 +1563,71 @@ footer {
     display: flex;
     align-items: center;
     width: 100%;
+    height: 480px; /* Solid fixed height to support absolute card deck */
     margin-top: 1.5rem;
   }
 
   .new-arrivals-grid {
-    display: flex !important;
-    flex-direction: row !important;
-    overflow-x: auto !important;
-    scroll-snap-type: x mandatory !important;
-    scroll-behavior: smooth !important;
-    gap: 0 !important;
+    position: relative !important;
     width: 100% !important;
-    scrollbar-width: none !important; /* Firefox hide scrollbar */
-    padding: 0 5px !important;
+    height: 440px !important;
+    overflow: visible !important; /* Critical so overflowing bottles remain visible! */
+    display: block !important;
     box-sizing: border-box !important;
-  }
-
-  .new-arrivals-grid::-webkit-scrollbar {
-    display: none; /* Chrome/Safari hide scrollbar */
   }
 
   .new-card {
-    flex: 0 0 100% !important;
+    position: absolute !important;
+    top: 0 !important;
+    left: 0 !important;
     width: 100% !important;
-    scroll-snap-align: center !important;
-    margin-top: 50px !important;
-    margin-bottom: 10px !important;
+    height: 100% !important;
+    margin-top: 0 !important; /* Margin handled inside 3D stack transform */
+    margin-bottom: 0 !important;
     box-sizing: border-box !important;
+    transition: transform 0.65s cubic-bezier(0.25, 1, 0.5, 1), opacity 0.65s cubic-bezier(0.25, 1, 0.5, 1) !important;
+    transform-style: preserve-3d;
+    backface-visibility: hidden;
+  }
+
+  /* CARD 1: Active Card (Front) */
+  .new-card.active-card {
+    z-index: 5 !important;
+    opacity: 1 !important;
+    transform: translate3d(0, 20px, 0) scale(1) !important;
+    pointer-events: auto !important;
+  }
+
+  /* CARD 2: Next Card (Stacked Behind) */
+  .new-card.next-card {
+    z-index: 3 !important;
+    opacity: 0.65 !important;
+    transform: translate3d(0, 5px, -20px) scale(0.93) !important; /* Stacked slightly smaller and shifted */
+    pointer-events: none !important;
+  }
+
+  /* CARD 3: Back Card (Hidden Behind) */
+  .new-card.back-card {
+    z-index: 1 !important;
+    opacity: 0 !important;
+    transform: translate3d(0, -10px, -40px) scale(0.86) !important;
+    pointer-events: none !important;
+  }
+
+  /* SLIDE OUT LEFT ANIMATION */
+  .new-card.slide-out-left {
+    transform: translate3d(-130%, 35px, 50px) rotate(-12deg) !important;
+    opacity: 0 !important;
+    z-index: 10 !important;
+    pointer-events: none !important;
   }
 
   .new-carousel-btn {
     display: flex !important;
     position: absolute;
-    top: calc(50% + 20px);
+    top: 55%; /* Centered vertically relative to card */
     transform: translateY(-50%);
-    z-index: 20;
+    z-index: 30; /* Above all cards */
     background: rgba(255, 255, 255, 0.95);
     border: 1px solid var(--border-color);
     color: var(--accent-gold);
@@ -1612,10 +1648,10 @@ footer {
   }
 
   .new-carousel-btn.btn-prev {
-    left: -10px; /* Float nicely on the left border */
+    left: -15px; /* Overlap slightly for extremely professional look */
   }
 
   .new-carousel-btn.btn-next {
-    right: -10px; /* Float nicely on the right border */
+    right: -15px; /* Overlap slightly for extremely professional look */
   }
 }
