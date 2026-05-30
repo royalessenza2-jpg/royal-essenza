@@ -588,7 +588,7 @@ document.addEventListener('DOMContentLoaded', () => {
     return re.test(email);
   }
 
-  // --- PREMIUM HORIZONTAL SLIDING HERO CAROUSEL ---
+  // --- PREMIUM HORIZONTAL SLIDING HERO CAROUSEL (CROSS-FADE UPGRADE) ---
   function initializeHeroSlider(customSlides) {
     const heroSlidesWrapper = document.querySelector('.hero-slides');
     if (!heroSlidesWrapper) return;
@@ -598,11 +598,11 @@ document.addEventListener('DOMContentLoaded', () => {
     ];
     const slidesToRender = customSlides.length > 0 ? customSlides : fallbackSlides;
 
-    heroSlidesWrapper.innerHTML = slidesToRender.map(slide => `
-      <div class="hero-slide" style="${slide.isGradient ? `background: ${slide.image}` : `background-image: url('${slide.image}')`};"></div>
+    heroSlidesWrapper.innerHTML = slidesToRender.map((slide, idx) => `
+      <div class="hero-slide ${idx === 0 ? 'active' : ''}" style="${slide.isGradient ? `background: ${slide.image}` : `background-image: url('${slide.image}')`};"></div>
     `).join('');
     
-    heroSlidesWrapper.style.width = `${slidesToRender.length * 100}%`;
+    heroSlidesWrapper.style.width = '100%';
     
     const heroIndicatorsContainer = document.querySelector('.hero-indicators');
     if (heroIndicatorsContainer) {
@@ -624,8 +624,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
       function goToHeroSlide(index) {
         currentHeroSlide = index;
-        const translatePercent = -(index * 100) / totalHeroSlides;
-        heroSlidesWrapper.style.transform = `translateX(${translatePercent}%)`;
+        
+        heroSlides.forEach((slide, idx) => {
+          if (idx === index) {
+            slide.classList.add('active');
+          } else {
+            slide.classList.remove('active');
+          }
+        });
 
         heroIndicators.forEach((indicator, idx) => {
           if (idx === index) {
@@ -1012,31 +1018,40 @@ document.addEventListener('DOMContentLoaded', () => {
   let currentProductsList = [];
   let currentTopRunningScent = null;
 
-  function renderTopRunningItem() {
+  let signatureSliderInterval = null;
+  function initializeSignatureSlider(customImages) {
     const topRunningContainer = document.getElementById('top-running-container');
     if (!topRunningContainer) return;
-    
-    let featured = null;
-    
-    if (currentTopRunningScent && currentTopRunningScent.name) {
-      featured = {
-        id: 'top-running-scent',
-        name: currentTopRunningScent.name
-      };
-    } else {
-      featured = {
-        id: 'top-running-scent',
-        name: 'Crystal Noir'
-      };
-    }
-    
-    const imgSrc = currentTopRunningScent && currentTopRunningScent.image ? currentTopRunningScent.image : 'assets/signature_scent.png';
+
+    const fallbackImages = ['assets/signature_scent.png'];
+    const imagesToRender = customImages && customImages.length > 0 
+      ? customImages.map(item => item.image) 
+      : fallbackImages;
+
+    let featuredId = 'top-running-scent';
     
     topRunningContainer.innerHTML = `
-      <a href="product-detail.html?id=${featured.id}" class="signature-banner-link">
-        <img src="${imgSrc}" alt="Crystal Noir Signature Showcase" class="signature-banner-img">
+      <a href="product-detail.html?id=${featuredId}" class="signature-banner-link">
+        <div class="signature-slides-wrapper" style="position: relative; width: 100%; height: 100%; overflow: hidden;">
+          ${imagesToRender.map((imgUrl, idx) => `
+            <img src="${imgUrl}" alt="Signature Showcase Slide ${idx + 1}" class="signature-banner-img ${idx === 0 ? 'active' : ''}">
+          `).join('')}
+        </div>
       </a>
     `;
+
+    // Clear previous signature slider timer
+    if (signatureSliderInterval) clearInterval(signatureSliderInterval);
+
+    const sigImages = topRunningContainer.querySelectorAll('.signature-banner-img');
+    if (sigImages.length > 1) {
+      let currentSigIdx = 0;
+      signatureSliderInterval = setInterval(() => {
+        sigImages[currentSigIdx].classList.remove('active');
+        currentSigIdx = (currentSigIdx + 1) % sigImages.length;
+        sigImages[currentSigIdx].classList.add('active');
+      }, 5000); // Har 5 seconds baad change
+    }
   }
 
   function initSignatureCanvasAnimation() {
@@ -1044,7 +1059,7 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   // Initial render of default centerpiece on startup
-  renderTopRunningItem();
+  initializeSignatureSlider([]);
 
   // Real-time Firebase Sync for Homepage dynamically
   db.ref('products').on('value', (snapshot) => {
@@ -1052,12 +1067,13 @@ document.addEventListener('DOMContentLoaded', () => {
     currentProductsList = data ? (Array.isArray(data) ? data : Object.values(data)) : [];
     
     renderNewArrivals(currentProductsList);
-    renderTopRunningItem();
   }, err => console.error('Homepage Firebase sync failed:', err));
 
-  // Sync custom signature centerpiece fragrance
-  db.ref('topRunningScent').on('value', (snapshot) => {
-    currentTopRunningScent = snapshot.val();
-    renderTopRunningItem();
+  // Sync custom signature centerpiece fragrance images array
+  db.ref('topRunningImages').on('value', (snapshot) => {
+    const data = snapshot.val();
+    const customImages = data ? (Array.isArray(data) ? data : Object.values(data)) : [];
+    localStorage.setItem('royal-signature-images', JSON.stringify(customImages));
+    initializeSignatureSlider(customImages);
   }, err => console.error('Featured centerpiece scent Firebase sync failed:', err));
 });
