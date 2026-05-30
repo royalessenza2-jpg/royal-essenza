@@ -598,9 +598,18 @@ document.addEventListener('DOMContentLoaded', () => {
     ];
     const slidesToRender = customSlides.length > 0 ? customSlides : fallbackSlides;
 
-    heroSlidesWrapper.innerHTML = slidesToRender.map((slide, idx) => `
-      <div class="hero-slide ${idx === 0 ? 'active' : ''}" style="${slide.isGradient ? `background: ${slide.image}` : `background-image: url('${slide.image}')`};"></div>
-    `).join('');
+    heroSlidesWrapper.innerHTML = slidesToRender.map((slide, idx) => {
+      if (slide.isGradient) {
+        return `<div class="hero-slide ${idx === 0 ? 'active' : ''}" style="background: ${slide.image}"></div>`;
+      } else {
+        return `
+          <div class="hero-slide ${idx === 0 ? 'active' : ''}">
+            <div class="hero-slide-blur" style="background-image: url('${slide.image}')"></div>
+            <div class="hero-slide-content" style="background-image: url('${slide.image}')"></div>
+          </div>
+        `;
+      }
+    }).join('');
     
     heroSlidesWrapper.style.width = '100%';
     
