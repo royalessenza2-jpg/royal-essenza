@@ -723,28 +723,75 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
   // --- MOBILE CREATIVE 3D COVERFLOW SLIDER CONTROLLER ---
-  const cards = document.querySelectorAll('.new-card');
-  const prevBtn = document.querySelector('.new-carousel-btn.btn-prev');
-  const nextBtn = document.querySelector('.new-carousel-btn.btn-next');
+  let newArrivalsAutoRotateInterval = null;
 
-  if (cards.length > 0 && prevBtn && nextBtn) {
-    let currentIndex = 0;
+  function initializeNewArrivalsCarousel() {
+    // Clear any previous interval first to avoid memory leaks
+    if (newArrivalsAutoRotateInterval) {
+      clearInterval(newArrivalsAutoRotateInterval);
+      newArrivalsAutoRotateInterval = null;
+    }
+
+    const cards = document.querySelectorAll('.new-card');
+    let prevBtn = document.querySelector('.new-carousel-btn.btn-prev');
+    let nextBtn = document.querySelector('.new-carousel-btn.btn-next');
+
+    if (!prevBtn || !nextBtn) return;
+
     const totalCards = cards.length;
+
+    // If 1 card or 0 cards, hide navigation buttons and stop Coverflow setup
+    if (totalCards <= 1) {
+      prevBtn.style.display = 'none';
+      nextBtn.style.display = 'none';
+      if (totalCards === 1) {
+        cards[0].classList.add('active-card');
+      }
+      return;
+    }
+
+    // Show navigation buttons since there are multiple cards
+    prevBtn.style.display = '';
+    nextBtn.style.display = '';
+
+    // Cleanly wipe duplicate event listeners by replacing navigation buttons with clones
+    const cleanPrevBtn = prevBtn.cloneNode(true);
+    prevBtn.parentNode.replaceChild(cleanPrevBtn, prevBtn);
+    prevBtn = cleanPrevBtn;
+
+    const cleanNextBtn = nextBtn.cloneNode(true);
+    nextBtn.parentNode.replaceChild(cleanNextBtn, nextBtn);
+    nextBtn = cleanNextBtn;
+
+    let currentIndex = 0;
     let isAnimating = false;
-    let autoRotateInterval;
 
     function updateCardStack() {
       cards.forEach((card, idx) => {
         // Reset Coverflow layout classes
         card.classList.remove('active-card', 'prev-card', 'next-card');
 
-        // Mathematically assign coverflow positions in infinite loop
-        if (idx === currentIndex) {
-          card.classList.add('active-card');
-        } else if (idx === (currentIndex - 1 + totalCards) % totalCards) {
-          card.classList.add('prev-card');
-        } else if (idx === (currentIndex + 1) % totalCards) {
-          card.classList.add('next-card');
+        if (totalCards === 2) {
+          // Safe handling for 2 cards to avoid overlapping conflicts
+          if (idx === currentIndex) {
+            card.classList.add('active-card');
+          } else {
+            // Offset the other card depending on active index
+            if (currentIndex === 0) {
+              card.classList.add('next-card');
+            } else {
+              card.classList.add('prev-card');
+            }
+          }
+        } else {
+          // Standard coverflow assignments (for 3+ cards)
+          if (idx === currentIndex) {
+            card.classList.add('active-card');
+          } else if (idx === (currentIndex - 1 + totalCards) % totalCards) {
+            card.classList.add('prev-card');
+          } else if (idx === (currentIndex + 1) % totalCards) {
+            card.classList.add('next-card');
+          }
         }
       });
     }
@@ -752,7 +799,6 @@ document.addEventListener('DOMContentLoaded', () => {
     // Initialize stack
     updateCardStack();
 
-    // Debounced transition triggers for ultra-smooth 60fps interaction
     function rotateNext() {
       if (isAnimating) return;
       isAnimating = true;
@@ -769,21 +815,21 @@ document.addEventListener('DOMContentLoaded', () => {
       setTimeout(() => { isAnimating = false; }, 500);
     }
 
-    // Automatic Rotation Timer Management
     function startAutoRotation() {
       stopAutoRotation();
-      autoRotateInterval = setInterval(rotateNext, 5000); // 5 seconds interval
+      newArrivalsAutoRotateInterval = setInterval(rotateNext, 5000);
     }
 
     function stopAutoRotation() {
-      if (autoRotateInterval) {
-        clearInterval(autoRotateInterval);
+      if (newArrivalsAutoRotateInterval) {
+        clearInterval(newArrivalsAutoRotateInterval);
+        newArrivalsAutoRotateInterval = null;
       }
     }
 
     function handleManualInteraction(action) {
       action();
-      startAutoRotation(); // Reset the 5s interval timer
+      startAutoRotation();
     }
 
     nextBtn.addEventListener('click', () => {
@@ -797,9 +843,8 @@ document.addEventListener('DOMContentLoaded', () => {
     // Tactile direct card clicks (clicking on the left/right cards rotates the carousel!)
     cards.forEach((card) => {
       card.addEventListener('click', (e) => {
-        if (window.innerWidth > 768) return; // Desktop uses grid list, click does nothing
+        if (window.innerWidth > 768) return;
         
-        // If user clicks interactive buttons inside the card, don't rotate the carousel!
         if (e.target.closest('.new-card-actions') || e.target.closest('.new-card-wishlist')) {
           return;
         }
@@ -833,10 +878,8 @@ document.addEventListener('DOMContentLoaded', () => {
     function handleSwipe() {
       const swipeDistance = touchEndX - touchStartX;
       if (swipeDistance < -50) {
-        // Swipe Left -> Next card
         handleManualInteraction(rotateNext);
       } else if (swipeDistance > 50) {
-        // Swipe Right -> Prev card
         handleManualInteraction(rotatePrev);
       }
     }
@@ -936,10 +979,17 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // --- FIREBASE REAL-TIME HOME LANDING PAGES INTEGRATION ---
   function renderNewArrivals(productsList) {
-    const newArrivalsGrid = document.getElementById('new-arrivals-grid');
+    let newArrivalsGrid = document.getElementById('new-arrivals-grid');
     if (!newArrivalsGrid) return;
     
-    if (productsList.length === 0) {
+    // Clear and clone the grid to completely wipe out any accumulated event listeners
+    const cleanGrid = newArrivalsGrid.cloneNode(false);
+    newArrivalsGrid.parentNode.replaceChild(cleanGrid, newArrivalsGrid);
+    newArrivalsGrid = cleanGrid;
+    
+    const cleanProducts = productsList.filter(p => p && p.id);
+    
+    if (cleanProducts.length === 0) {
       newArrivalsGrid.innerHTML = `
         <div style="grid-column: 1/-1; text-align: center; padding: 4rem; color: var(--accent-gold); font-family: var(--font-serif); width: 100%;">
           <p>Our sanctuary is currently preparing bespoke creations. Please check back shortly.</p>
@@ -948,8 +998,8 @@ document.addEventListener('DOMContentLoaded', () => {
       return;
     }
     
-    // Slice the 3 latest fragrances added by the admin
-    const latestProducts = productsList.slice(-3).reverse();
+    // Slice exactly the 3 latest fragrances added by the admin (reverse so latest is first)
+    const latestProducts = cleanProducts.slice(-3).reverse();
     
     newArrivalsGrid.innerHTML = '';
     latestProducts.forEach(product => {
@@ -1013,6 +1063,9 @@ document.addEventListener('DOMContentLoaded', () => {
         }
       });
     });
+
+    // Initialize/re-initialize the coverflow carousel once dynamic cards are injected
+    initializeNewArrivalsCarousel();
   }
 
   let currentProductsList = [];
