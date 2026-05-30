@@ -7,88 +7,29 @@
 document.addEventListener('DOMContentLoaded', () => {
   
   // --- PRODUCT DATABASE CATALOG ---
-  const PRODUCTS = [
-    {
-      id: 'attar-ashwaaq',
-      name: 'Ashwaaq Attar 12ml',
-      price: 8500,
-      category: 'attar',
-      image: 'assets/attar_bottle.png',
-      onSale: true,
-      inStock: true,
-      rating: '5 (3)'
-    },
-    {
-      id: 'attar-musk-silk',
-      name: 'Musk Silk Attar 12ml',
-      price: 9800,
-      category: 'attar',
-      image: 'assets/attar_bottle.png',
-      onSale: false,
-      inStock: true,
-      rating: '4.9 (5)'
-    },
-    {
-      id: 'perfume-oud-imperial',
-      name: 'Oud Imperial EDP 100ml',
-      price: 18900,
-      category: 'perfume',
-      image: 'assets/product_perfume.png',
-      onSale: true,
-      inStock: true,
-      rating: '4.9 (12)'
-    },
-    {
-      id: 'hajj-serenity-giftset',
-      name: 'Hajj Serenity Gift Box',
-      price: 14500,
-      category: 'giftset',
-      image: 'assets/new_hajj_giftbox.png',
-      onSale: false,
-      inStock: true,
-      rating: '5 (2)'
-    },
-    {
-      id: 'cherry-wood-perfume',
-      name: 'Cherry Wood Extrait 100ml',
-      price: 12800,
-      category: 'perfume',
-      image: 'assets/new_cherry_wood.png',
-      onSale: false,
-      inStock: true,
-      rating: '4.8 (8)'
-    },
-    {
-      id: 'midnight-amber-aroma',
-      name: 'Midnight Amber Candle',
-      price: 4200,
-      category: 'aroma',
-      image: 'assets/product_candle.png',
-      onSale: true,
-      inStock: false, // Out of stock to test out-of-stock toggles
-      rating: '4.7 (4)'
-    },
-    {
-      id: 'essential-oil-lavandula',
-      name: 'Lavandula Pure Oil 30ml',
-      price: 6400,
-      category: 'aroma',
-      image: 'assets/product_essential_oil.png',
-      onSale: false,
-      inStock: true,
-      rating: '4.9 (9)'
-    },
-    {
-      id: 'evoke-red-female',
-      name: 'Evoke Red Her EDP 75ml',
-      price: 11500,
-      category: 'perfume',
-      image: 'assets/new_evoke_red.png',
-      onSale: true,
-      inStock: true,
-      rating: '5 (1)'
-    }
-  ];
+  const defaultProducts = [];
+
+  let PRODUCTS = defaultProducts;
+  
+  // Real-time Firebase Products Loader & Initial Seeder
+  function initFirebaseProducts() {
+    db.ref('products').on('value', (snapshot) => {
+      const data = snapshot.val();
+      if (data) {
+        PRODUCTS = Array.isArray(data) ? data : Object.values(data);
+        localStorage.setItem('royal-products', JSON.stringify(PRODUCTS));
+        if (typeof renderCatalog === 'function') {
+          renderCatalog();
+        }
+      } else {
+        // Seed initial elegant default products to Firebase Realtime Database
+        const defaultProductObj = {};
+        defaultProducts.forEach(p => { defaultProductObj[p.id] = p; });
+        db.ref('products').set(defaultProductObj);
+      }
+    }, err => console.error('Failed to load products from Firebase:', err));
+  }
+  initFirebaseProducts();
 
   // --- LOCALSTORAGE SYNCED SHOPPING CART ---
   let cart = [];
@@ -176,7 +117,7 @@ document.addEventListener('DOMContentLoaded', () => {
           <p>Aapka shopping bag khali hai.</p>
         </div>
       `;
-      if (cartTotalPriceElem) cartTotalPriceElem.textContent = "Rs.0";
+      if (cartTotalPriceElem) cartTotalPriceElem.textContent = "PKR 0";
     } else {
       cartItemsWrapper.innerHTML = '';
       let subtotal = 0;
@@ -195,7 +136,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 <span class="qty-count">${item.quantity}</span>
                 <button class="qty-btn btn-qty-plus">+</button>
               </div>
-              <span class="cart-item-price">Rs.${itemTotal.toLocaleString()}</span>
+              <span class="cart-item-price">PKR ${itemTotal.toLocaleString()}</span>
             </div>
             <button class="btn-remove-item">
               <svg style="width: 18px; height: 18px; fill: currentColor;" viewBox="0 0 24 24">
@@ -207,7 +148,7 @@ document.addEventListener('DOMContentLoaded', () => {
         cartItemsWrapper.insertAdjacentHTML('beforeend', cartItemHTML);
       });
 
-      if (cartTotalPriceElem) cartTotalPriceElem.textContent = `Rs.${subtotal.toLocaleString()}`;
+      if (cartTotalPriceElem) cartTotalPriceElem.textContent = `PKR ${subtotal.toLocaleString()}`;
 
       // Quantity adjustments Event Listeners
       cartItemsWrapper.querySelectorAll('.btn-qty-minus').forEach(btn => {
@@ -250,8 +191,181 @@ document.addEventListener('DOMContentLoaded', () => {
     saveCartAndSync();
   }
 
+  // --- CHECKOUT MODAL SYSTEM ---
+  function openCheckoutModal() {
+    if (cart.length === 0) {
+      alert("Aapka shopping bag khali hai. Please add products first!");
+      return;
+    }
+
+    closeCart();
+
+    const modalHTML = `
+      <div class="checkout-modal-overlay" id="checkout-modal">
+        <div class="checkout-modal-card">
+          <div class="checkout-modal-header">
+            <h3>Checkout Order</h3>
+            <button class="btn-close-checkout" id="btn-close-checkout-modal">&times;</button>
+          </div>
+          <form class="checkout-form" id="checkout-order-form">
+            <div class="form-group">
+              <label>Full Name</label>
+              <input type="text" id="checkout-name" required placeholder="Enter your full name">
+            </div>
+            <div class="form-group">
+              <label>Phone Number</label>
+              <input type="tel" id="checkout-phone" required placeholder="Enter your mobile number">
+            </div>
+            <div class="form-group">
+              <label>Delivery Address</label>
+              <textarea id="checkout-address" required placeholder="Enter your complete delivery address" rows="3"></textarea>
+            </div>
+            <div class="form-group">
+              <label>City</label>
+              <input type="text" id="checkout-city" required placeholder="e.g. Karachi, Lahore, Islamabad">
+            </div>
+            <div class="form-group">
+              <label>Order Notes (Optional)</label>
+              <input type="text" id="checkout-notes" placeholder="e.g. Please call before delivery">
+            </div>
+            <div class="checkout-payment-info">
+              <svg style="width: 20px; height: 20px; fill: var(--accent-gold); margin-right: 0.5rem;" viewBox="0 0 24 24">
+                <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/>
+              </svg>
+              <span>Payment Method: <strong>Cash on Delivery (COD)</strong></span>
+            </div>
+            <div class="checkout-summary-box">
+              <div class="checkout-summary-title">Order Summary</div>
+              ${cart.map(item => `
+                <div class="checkout-summary-item">
+                  <span>${item.name} (x${item.quantity})</span>
+                  <span>PKR ${(item.price * item.quantity).toLocaleString()}</span>
+                </div>
+              `).join('')}
+              <div class="checkout-summary-total">
+                <span>Total Amount</span>
+                <span>PKR ${cart.reduce((sum, item) => sum + (item.price * item.quantity), 0).toLocaleString()}</span>
+              </div>
+            </div>
+            <button type="submit" class="btn-place-order">Place Order (COD)</button>
+          </form>
+        </div>
+      </div>
+    `;
+
+    document.body.insertAdjacentHTML('beforeend', modalHTML);
+    const modal = document.getElementById('checkout-modal');
+    
+    setTimeout(() => {
+      modal.classList.add('open');
+    }, 10);
+
+    const closeModal = () => {
+      modal.classList.remove('open');
+      setTimeout(() => {
+        modal.remove();
+      }, 400);
+    };
+
+    document.getElementById('btn-close-checkout-modal').addEventListener('click', closeModal);
+    modal.addEventListener('click', (e) => {
+      if (e.target === modal) closeModal();
+    });
+
+    document.getElementById('checkout-order-form').addEventListener('submit', (e) => {
+      e.preventDefault();
+      
+      const orderID = 'RE-' + Math.floor(100000 + Math.random() * 900000);
+      const newOrder = {
+        id: orderID,
+        customer: {
+          name: document.getElementById('checkout-name').value.trim(),
+          phone: document.getElementById('checkout-phone').value.trim(),
+          address: document.getElementById('checkout-address').value.trim(),
+          city: document.getElementById('checkout-city').value.trim(),
+          notes: document.getElementById('checkout-notes').value.trim()
+        },
+        items: [...cart],
+        total: cart.reduce((sum, item) => sum + (item.price * item.quantity), 0),
+        date: new Date().toISOString(),
+        status: 'Pending'
+      };
+
+      let orders = [];
+      try {
+        const savedOrders = localStorage.getItem('royal-orders');
+        if (savedOrders) orders = JSON.parse(savedOrders);
+      } catch (err) {
+        console.error(err);
+      }
+      orders.unshift(newOrder);
+      localStorage.setItem('royal-orders', JSON.stringify(orders));
+
+      // Increment stats order count
+      let stats = { totalVisitors: 169, todaysVisitors: 2, totalOrders: 0 };
+      try {
+        const savedStats = localStorage.getItem('royal-stats');
+        if (savedStats) stats = JSON.parse(savedStats);
+      } catch (err) {}
+      stats.totalOrders = (stats.totalOrders || 0) + 1;
+      localStorage.setItem('royal-stats', JSON.stringify(stats));
+
+      cart = [];
+      saveCartAndSync();
+
+      const card = modal.querySelector('.checkout-modal-card');
+      card.innerHTML = `
+        <div class="checkout-success-container">
+          <svg class="checkout-success-icon" viewBox="0 0 24 24">
+            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+          </svg>
+          <h3 class="checkout-success-title">Order Placed!</h3>
+          <p class="checkout-success-msg">Tashakkur! Your luxury fragrance order has been received. You can track its status using your order ID below:</p>
+          <div class="checkout-success-id">${orderID}</div>
+          <a href="track-order.html?id=${orderID}" class="btn-success-track">Track Your Order</a>
+        </div>
+      `;
+    });
+  }
+
+  // --- DYNAMIC SHOP INFO ---
+  function loadShopInfo() {
+    let shopInfo = {
+      address: 'Villas Sector A, Royal Avenue, Karachi',
+      phone: '+92 21 111 769 25',
+      email: 'concierge@royalessenza.com',
+      whatsapp: 'https://wa.me/923001234567',
+      instagram: '#',
+      tiktok: '#'
+    };
+    try {
+      const savedShopInfo = localStorage.getItem('royal-shop-info');
+      if (savedShopInfo) {
+        shopInfo = JSON.parse(savedShopInfo);
+      }
+    } catch (e) {}
+
+    const waFloating = document.querySelector('.floating-whatsapp-btn');
+    if (waFloating && shopInfo.whatsapp) {
+      waFloating.href = shopInfo.whatsapp;
+    }
+
+    const socialLinks = document.querySelectorAll('.contact-social-icons a, .menu-drawer-socials a');
+    socialLinks.forEach(link => {
+      const label = link.getAttribute('aria-label');
+      if (label === 'Instagram' && shopInfo.instagram) link.href = shopInfo.instagram;
+      if (label === 'TikTok' && shopInfo.tiktok) link.href = shopInfo.tiktok;
+    });
+  }
+  loadShopInfo();
+
   // Initial cart draw
   updateCartUI();
+
+  // Attach Checkout Button Handlers
+  document.querySelectorAll('.btn-checkout').forEach(btn => {
+    btn.addEventListener('click', openCheckoutModal);
+  });
 
 
   // --- DYNAMIC CATALOG FILTER & RENDER SYSTEMS ---
@@ -348,16 +462,18 @@ document.addEventListener('DOMContentLoaded', () => {
           ${saleBadgeHTML}
           
           <div class="new-card-img-wrapper">
-            <img src="${product.image}" alt="${product.name}" class="new-card-img">
+            <a href="product-detail.html?id=${product.id}">
+              <img src="${product.image}" alt="${product.name}" class="new-card-img">
+            </a>
           </div>
           
           <div class="new-card-info">
             <span class="new-card-category">${product.category.toUpperCase()} / ${product.inStock ? 'IN STOCK' : 'OUT OF STOCK'}</span>
-            <h3 class="new-card-title">${product.name}</h3>
+            <h3 class="new-card-title"><a href="product-detail.html?id=${product.id}">${product.name}</a></h3>
             <p class="new-card-description">${descText}</p>
             
             <div class="new-card-price-row">
-              <span class="new-card-price">Rs.${product.price.toLocaleString()}</span>
+              <span class="new-card-price">PKR ${product.price.toLocaleString()}</span>
               <span class="new-card-rating-badge">${product.rating.split(' ')[0]} ★</span>
             </div>
             
@@ -477,12 +593,51 @@ document.addEventListener('DOMContentLoaded', () => {
   // --- MOBILE SIDEBAR FILTERS TOGGLE SYSTEM ---
   const btnMobileFiltersToggle = document.getElementById('btn-mobile-filters-toggle');
   const collectionSidebar = document.querySelector('.collection-sidebar');
+  const filtersOverlay = document.getElementById('filters-overlay');
+  const btnCloseSidebar = document.getElementById('btn-close-sidebar');
+  
+  function openFilters() {
+    if (collectionSidebar) collectionSidebar.classList.add('open');
+    if (btnMobileFiltersToggle) btnMobileFiltersToggle.classList.add('active');
+    if (filtersOverlay) {
+      filtersOverlay.style.display = 'block';
+      setTimeout(() => {
+        filtersOverlay.classList.add('open');
+      }, 10);
+    }
+  }
+  
+  function closeFilters() {
+    if (collectionSidebar) collectionSidebar.classList.remove('open');
+    if (btnMobileFiltersToggle) btnMobileFiltersToggle.classList.remove('active');
+    if (filtersOverlay) {
+      filtersOverlay.classList.remove('open');
+      setTimeout(() => {
+        filtersOverlay.style.display = 'none';
+      }, 450);
+    }
+  }
   
   if (btnMobileFiltersToggle && collectionSidebar) {
-    btnMobileFiltersToggle.addEventListener('click', () => {
-      collectionSidebar.classList.toggle('open');
-      btnMobileFiltersToggle.classList.toggle('active');
+    btnMobileFiltersToggle.addEventListener('click', (e) => {
+      e.stopPropagation();
+      if (collectionSidebar.classList.contains('open')) {
+        closeFilters();
+      } else {
+        openFilters();
+      }
     });
+  }
+  
+  if (btnCloseSidebar) {
+    btnCloseSidebar.addEventListener('click', (e) => {
+      e.stopPropagation();
+      closeFilters();
+    });
+  }
+  
+  if (filtersOverlay) {
+    filtersOverlay.addEventListener('click', closeFilters);
   }
 
 

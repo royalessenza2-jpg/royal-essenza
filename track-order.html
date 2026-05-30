@@ -371,7 +371,7 @@
               <div class="timeline-dot"></div>
               <div class="timeline-info">
                 <h4 class="step-title">Order Placed & Certified</h4>
-                <p class="step-time">May 28, 2026 - 10:30 AM</p>
+                <p class="step-time" id="track-step1-time">Loading date...</p>
               </div>
             </div>
             
@@ -380,7 +380,7 @@
               <div class="timeline-dot"></div>
               <div class="timeline-info">
                 <h4 class="step-title">Dispatched from Royal Fragrance Lab</h4>
-                <p class="step-time">May 28, 2026 - 4:15 PM</p>
+                <p class="step-time" id="track-step2-time">Loading date...</p>
               </div>
             </div>
             
@@ -389,7 +389,7 @@
               <div class="timeline-dot"></div>
               <div class="timeline-info">
                 <h4 class="step-title">In Transit via Royal Concierge</h4>
-                <p class="step-time">May 29, 2026 - 09:00 AM</p>
+                <p class="step-time" id="track-step3-time">Loading date...</p>
                 <p class="step-desc">Your bespoke aromatic package is with our premium courier service in Dubai, currently in transit to your destination.</p>
               </div>
             </div>
@@ -399,7 +399,7 @@
               <div class="timeline-dot"></div>
               <div class="timeline-info">
                 <h4 class="step-title">Out for Delivery & Handover</h4>
-                <p class="step-time">Expected: May 30, 2026</p>
+                <p class="step-time" id="track-step4-time">Expected: Loading date...</p>
               </div>
             </div>
           </div>
@@ -450,6 +450,11 @@
       <p class="copyright">&copy; 2026 ROYAL ESSENZA. All Rights Reserved.</p>
     </div>
   </footer>
+
+  <!-- FIREBASE REALTIME SYNC SDK & CONFIG -->
+  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
+  <script src="firebase-config.js"></script>
 
   <!-- Script for Dedicated Track Order logic -->
   <script src="track-order.js"></script>

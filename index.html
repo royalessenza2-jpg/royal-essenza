@@ -73,10 +73,8 @@
   <!-- Luxury Hero Section with Animated Slideshow -->
   <section id="hero" class="hero">
     <!-- Sliding Background Layers -->
-    <div class="hero-slides">
-      <div class="hero-slide" style="background-image: url('assets/hero_background.png');"></div>
-      <div class="hero-slide" style="background-image: url('assets/hero_slide2.png');"></div>
-      <div class="hero-slide" style="background-image: url('assets/hero_slide3.png');"></div>
+    <div class="hero-slides" id="hero-slides">
+      <!-- Generated dynamically by app.js with obsidian radial gradient fallback -->
     </div>
     
     <!-- Hero Navigation Arrows -->
@@ -116,104 +114,10 @@
           </svg>
         </button>
 
-        <div class="new-arrivals-grid">
-          <!-- Card 1: Hajj Serenity Gift Box -->
-          <div class="new-card">
-            <!-- Rating Badge -->
-            <div class="new-card-badge">★ 5 (1)</div>
-            
-            <!-- Wishlist Heart Icon -->
-            <button class="new-card-wishlist" aria-label="Add to wishlist">
-              <svg style="width: 20px; height: 20px; fill: none; stroke: currentColor; stroke-width: 1.5;" viewBox="0 0 24 24">
-                <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
-              </svg>
-            </button>
-            
-            <div class="new-card-img-wrapper">
-              <img src="assets/new_hajj_giftbox.png" alt="Hajj Serenity Gift Box" class="new-card-img">
-            </div>
-            
-            <div class="new-card-info">
-              <span class="new-card-category">GIFT SET / FEMALE</span>
-              <h3 class="new-card-title">Hajj Serenity Gift Box</h3>
-              <span class="new-card-price">AED 367.5</span>
-              
-              <!-- Dual Action Buttons -->
-              <div class="new-card-actions">
-                <button class="btn-new-buy-now">Buy Now</button>
-                <button class="btn-new-add-to-cart btn-add-to-bag" 
-                        data-id="hajj-serenity" 
-                        data-name="Hajj Serenity Gift Box" 
-                        data-price="367.50" 
-                        data-image="assets/new_hajj_giftbox.png">
-                  Add to Cart
-                </button>
-              </div>
-            </div>
-          </div>
-
-          <!-- Card 2: Cherry Wood -->
-          <div class="new-card">
-            <!-- Wishlist Heart Icon -->
-            <button class="new-card-wishlist" aria-label="Add to wishlist">
-              <svg style="width: 20px; height: 20px; fill: none; stroke: currentColor; stroke-width: 1.5;" viewBox="0 0 24 24">
-                <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
-              </svg>
-            </button>
-            
-            <div class="new-card-img-wrapper">
-              <img src="assets/new_cherry_wood.png" alt="Cherry Wood Perfume" class="new-card-img">
-            </div>
-            
-            <div class="new-card-info">
-              <span class="new-card-category">EAU DE PARFUM / 100 ML / UNISEX</span>
-              <h3 class="new-card-title">Cherry Wood</h3>
-              <span class="new-card-price">AED 575</span>
-              
-              <!-- Dual Action Buttons -->
-              <div class="new-card-actions">
-                <button class="btn-new-buy-now">Buy Now</button>
-                <button class="btn-new-add-to-cart btn-add-to-bag" 
-                        data-id="cherry-wood-new" 
-                        data-name="Cherry Wood Extrait" 
-                        data-price="575.00" 
-                        data-image="assets/new_cherry_wood.png">
-                  Add to Cart
-                </button>
-              </div>
-            </div>
-          </div>
-
-          <!-- Card 3: Evoke Red Edition Her -->
-          <div class="new-card">
-            <!-- Wishlist Heart Icon -->
-            <button class="new-card-wishlist" aria-label="Add to wishlist">
-              <svg style="width: 20px; height: 20px; fill: none; stroke: currentColor; stroke-width: 1.5;" viewBox="0 0 24 24">
-                <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
-              </svg>
-            </button>
-            
-            <div class="new-card-img-wrapper">
-              <img src="assets/new_evoke_red.png" alt="Evoke Red Edition Her" class="new-card-img">
-            </div>
-            
-            <div class="new-card-info">
-              <span class="new-card-category">EAU DE PARFUM / 75 ML / FEMALE</span>
-              <h3 class="new-card-title">Evoke Red Edition Her</h3>
-              <span class="new-card-price">AED 175</span>
-              
-              <!-- Dual Action Buttons -->
-              <div class="new-card-actions">
-                <button class="btn-new-buy-now">Buy Now</button>
-                <button class="btn-new-add-to-cart btn-add-to-bag" 
-                        data-id="evoke-red-new" 
-                        data-name="Evoke Red Edition" 
-                        data-price="175.00" 
-                        data-image="assets/new_evoke_red.png">
-                  Add to Cart
-                </button>
-              </div>
-            </div>
+        <div class="new-arrivals-grid" id="new-arrivals-grid">
+          <!-- Generated dynamically from Firebase by app.js -->
+          <div style="grid-column: 1/-1; text-align: center; padding: 4rem; color: var(--accent-gold); font-family: var(--font-serif); width: 100%;">
+            <p>Our sanctuary is currently preparing bespoke creations. Please check back shortly.</p>
           </div>
         </div>
 
@@ -237,37 +141,13 @@
     <div class="container">
       <div class="section-header">
         <span class="section-subtitle">Signature Creation</span>
-        <h2 class="section-title">Top Running Item</h2>
+        <h2 class="section-title">Signature</h2>
       </div>
 
-      <div class="top-running-container">
-        <!-- Single Featured Product Card -->
-        <div class="featured-product-card">
-          <div class="featured-img-column">
-            <img src="assets/product_perfume.png" alt="Oud Imperial Perfume" class="featured-card-img">
-          </div>
-          <div class="featured-info-column">
-            <span class="featured-category">Extrait De Parfum / Unisex</span>
-            <h3 class="featured-title">Oud Imperial</h3>
-            <p class="featured-description">Our most celebrated signature creation. An opulent royal symphony of rare Cambodian Oud, warm gilded saffron, fresh lavender absolute, and sweet amberwood. Infused with unparalleled longevity and a majestic sillage that commands presence.</p>
-            
-            <div class="featured-price-row">
-              <span class="featured-price">AED 895.00</span>
-              <span class="featured-rating">★★★★★ (4.9/5)</span>
-            </div>
-            
-            <div class="featured-actions">
-              <button class="btn-featured-buy">Buy Now</button>
-              <button class="btn-featured-add btn-add-to-bag"
-                      data-id="oud-imperial-featured"
-                      data-name="Oud Imperial Signature"
-                      data-price="245.00"
-                      data-image="assets/product_perfume.png">
-                Add to Cart
-              </button>
-            </div>
-          </div>
-        </div>
+      <div class="top-running-container" id="top-running-container">
+        <a href="product-detail.html?id=top-running-scent" class="signature-banner-link">
+          <img src="assets/signature_scent.png" alt="Crystal Noir Signature Showcase" class="signature-banner-img">
+        </a>
       </div>
     </div>
   </section>
@@ -361,7 +241,7 @@
     <div class="cart-footer">
       <div class="cart-total-row">
         <span>Subtotal</span>
-        <span class="cart-total-price">$0.00</span>
+        <span class="cart-total-price">PKR 0</span>
       </div>
       <button class="btn-checkout">Checkout</button>
     </div>
@@ -423,6 +303,11 @@
       <path d="M13.601 2.326A7.854 7.854 0 0 0 7.994 0C3.627 0 .068 3.558.064 7.926c0 1.399.366 2.76 1.057 3.965L0 16l4.204-1.102a7.933 7.933 0 0 0 3.79 1.043h.003c4.368 0 7.927-3.558 7.929-7.93a7.882 7.882 0 0 0-2.33-5.69M7.994 14.521a6.573 6.573 0 0 1-3.356-.92l-.24-.144-2.494.654.666-2.433-.156-.251a6.56 6.56 0 0 1-1.007-3.505c0-3.626 2.957-6.584 6.591-6.584a6.56 6.56 0 0 1 4.66 1.931 6.557 6.557 0 0 1 1.928 4.66c-.004 3.639-2.961 6.592-6.592 6.592zm3.69-4.82c-.202-.101-1.196-.59-1.38-.658-.182-.067-.315-.1-.448.1-.134.2-.516.642-.634.778-.118.137-.236.154-.438.053a5.483 5.483 0 0 1-1.624-1.002 5.922 5.922 0 0 1-1.123-1.396c-.118-.202-.012-.311.089-.412.09-.09.202-.236.302-.354.101-.118.134-.2.202-.334.067-.136.034-.254-.017-.355-.05-.101-.448-1.08-.614-1.48-.162-.389-.34-.336-.468-.343a5.99 5.99 0 0 0-.34-.007c-.134 0-.352.05-.536.25-.184.2-.702.686-.702 1.675 0 .99.72 1.948.82 2.082.1.134 1.417 2.167 3.435 3.037.48.207.854.33 1.147.424.483.153.923.131 1.272.079.39-.058 1.197-.49 1.362-.962.166-.473.166-.88.117-.965-.05-.084-.183-.133-.385-.234z"/>
     </svg>
   </a>
+
+  <!-- FIREBASE REALTIME SYNC SDK & CONFIG -->
+  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
+  <script src="firebase-config.js"></script>
 
   <!-- Link script file -->
   <script src="app.js"></script>
