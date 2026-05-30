@@ -2619,92 +2619,8 @@ footer {
 }
 
 /* ==========================================================================
-   LUXURY INTERACTIVE TRACK ORDER DRAWER
+   DEDICATED "TRACK YOUR ORDER" PAGE LAYOUT AND ANIMATIONS
    ========================================================================== */
-
-/* Track Drawer Slider Box */
-.track-overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100vw;
-  height: 100vh;
-  background: rgba(0, 0, 0, 0.4);
-  backdrop-filter: blur(5px);
-  -webkit-backdrop-filter: blur(5px);
-  z-index: 1900;
-  display: none;
-  opacity: 0;
-  transition: opacity 0.4s ease;
-}
-
-.track-overlay.open {
-  display: block;
-  opacity: 1;
-}
-
-.track-drawer {
-  position: fixed;
-  top: 0;
-  right: -450px;
-  width: 450px;
-  height: 100vh;
-  background: var(--bg-sec);
-  border-left: 1px solid var(--border-color);
-  box-shadow: -10px 0 35px rgba(0, 0, 0, 0.08);
-  z-index: 2000;
-  display: flex;
-  flex-direction: column;
-  transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
-  will-change: transform;
-  backface-visibility: hidden;
-}
-
-.track-drawer.open {
-  transform: translateX(-450px);
-}
-
-@media (max-width: 480px) {
-  .track-drawer {
-    width: 100%;
-    right: -100%;
-  }
-  .track-drawer.open {
-    transform: translateX(-100%);
-  }
-}
-
-/* Track Header & Content */
-.track-header {
-  padding: 2rem;
-  border-bottom: 1px solid var(--border-color);
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  background: var(--bg-main);
-}
-
-.track-title {
-  font-size: 1.4rem;
-  display: flex;
-  align-items: center;
-  gap: 0.8rem;
-  color: var(--text-main);
-}
-
-.btn-close-track {
-  color: var(--text-soft);
-  font-size: 1.5rem;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: var(--transition-fast);
-}
-
-.btn-close-track:hover {
-  color: var(--accent-gold);
-  transform: scale(1.05);
-}
 
 .track-content {
   flex-grow: 1;
@@ -3157,6 +3073,10 @@ footer {
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.02);
 }
 
+.mobile-filters-toggle-btn {
+  display: none; /* Hidden on desktop by default */
+}
+
 .collection-search-wrapper {
   flex: 1; /* Automatically stretches to occupy all available remaining horizontal space */
 }
@@ -3267,20 +3187,246 @@ footer {
   }
   
   .collection-sidebar {
+    display: none !important; /* Hides sidebar on tablet/mobile by default */
     width: 100% !important;
-    display: grid !important;
     grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)) !important;
     gap: 1.5rem !important;
+    animation: fadeIn 0.4s ease forwards;
+  }
+
+  .collection-sidebar.open {
+    display: grid !important; /* Opens sidebar when toggled */
   }
   
   .collection-top-bar {
-    flex-direction: column !important;
-    padding: 1.5rem !important;
-    gap: 1rem !important;
+    flex-direction: row !important; /* Side-by-side row on tablet/mobile */
+    flex-wrap: wrap !important;
+    padding: 1.2rem !important;
+    gap: 0.8rem !important;
   }
   
-  .collection-search-wrapper, .filter-select-wrapper {
+  .collection-search-wrapper {
+    flex: 1 1 auto !important;
+    width: calc(65% - 0.4rem) !important;
+  }
+
+  .mobile-filters-toggle-btn {
+    display: flex !important; /* Visible on tablet/mobile */
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    background: var(--accent-gold);
+    color: #111111;
+    border: none;
+    border-radius: 30px;
+    padding: 0.75rem 1.2rem;
+    font-family: var(--font-sans);
+    font-size: 0.85rem;
+    font-weight: 600;
+    cursor: pointer;
+    flex: 0 0 calc(35% - 0.4rem) !important;
+    height: 42px;
+    transition: var(--transition-fast);
+  }
+
+  .mobile-filters-toggle-btn:hover, .mobile-filters-toggle-btn.active {
+    background: var(--accent-hover);
+    color: #FFFFFF;
+  }
+
+  .filter-select-wrapper {
+    width: 100% !important; /* Sort dropdown takes full width on row 2 */
+    max-width: 100% !important;
+    flex: 0 0 100% !important;
+  }
+
+  .luxury-filter-select {
     width: 100% !important;
+    background: #F7F5F0 !important; /* Matches Ivory cards style! */
+  }
+
+  /* Force exactly 2 columns side-by-side on all tablet/mobile viewports */
+  .collection-products-grid {
+    grid-template-columns: repeat(2, 1fr) !important; 
+    gap: 1rem !important;
+  }
+
+  /* Premium Mobile Two-Tone E-Commerce Product Cards - Isolated to Catalog Grid */
+  .collection-products-grid .new-card {
+    background: #FFFFFF !important; /* White top section */
+    background-image: none !important;
+    border: 1px solid var(--border-color) !important;
+    border-radius: 12px !important;
+    overflow: hidden !important; /* Clips bottom cream footer inside card corners */
+    padding: 0 !important;
+    margin-top: 20px !important;
+    display: flex !important;
+    flex-direction: column !important;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.02) !important;
+    position: relative !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+    pointer-events: auto !important;
+    transform: none !important;
+    height: auto !important;
+    width: auto !important;
+  }
+  
+  .collection-products-grid .new-card-img-wrapper {
+    background: #FFFFFF !important;
+    height: 160px !important; /* Generous height for larger product display */
+    margin-top: 0 !important; /* Forces the bottle to stay perfectly centered inside card */
+    margin-bottom: 0 !important;
+    padding: 0.8rem !important;
+    width: 100% !important;
+    display: flex !important;
+    justify-content: center !important;
+    align-items: center !important;
+    position: relative !important;
+  }
+  
+  .collection-products-grid .new-card-img {
+    max-height: 130px !important; /* Prominent, bold, and larger bottle size! */
+    width: auto !important;
+    object-fit: contain !important;
+    transform: scale(1) !important;
+  }
+
+  /* Gold vector pattern watermark in top right corner behind bottle */
+  .collection-products-grid .new-card-img-wrapper::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 50%;
+    height: 100%;
+    background-image: url("assets/design.png");
+    background-size: cover;
+    background-position: top right;
+    opacity: 0.15;
+    pointer-events: none;
+  }
+  
+  .collection-products-grid .new-card-info {
+    background: #F7F5F0 !important; /* Ivory Alabaster Cream details footer section */
+    background-image: url("assets/design.png") !important;
+    background-size: 100% 100% !important;
+    background-repeat: no-repeat !important;
+    padding: 1rem 0.8rem 1.2rem 0.8rem !important;
+    flex-grow: 1 !important;
+    display: flex !important;
+    flex-direction: column !important;
+    text-align: left !important;
+    border-top: 1px solid var(--border-color) !important;
+    position: relative !important;
+  }
+  
+  .collection-products-grid .new-card-category {
+    font-size: 0.58rem !important;
+    letter-spacing: 0.8px !important;
+    color: var(--accent-gold) !important;
+    font-weight: 600 !important;
+    margin-bottom: 0.2rem !important;
+    max-width: calc(100% - 35px) !important; /* Leaves width for cart absolute icon button */
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+  }
+  
+  .collection-products-grid .new-card-title {
+    font-family: var(--font-sans) !important;
+    font-weight: 700 !important;
+    font-style: normal !important;
+    font-size: 0.85rem !important;
+    color: #111111 !important;
+    margin-bottom: 0.3rem !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.5px !important;
+    max-width: 100% !important;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+  }
+  
+  .collection-products-grid .new-card-description {
+    display: block !important;
+    font-family: var(--font-serif) !important;
+    font-style: italic !important;
+    color: #555555 !important;
+    font-size: 0.72rem !important;
+    line-height: 1.3 !important;
+    margin-bottom: 0.6rem !important;
+    white-space: nowrap !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+    width: 100% !important;
+  }
+  
+  .collection-products-grid .new-card-price-row {
+    display: flex !important;
+    justify-content: space-between !important;
+    align-items: center !important;
+    width: 100% !important;
+    margin-top: auto !important;
+    margin-bottom: 0 !important;
+    padding-top: 0.4rem !important;
+    border-top: 1px dashed rgba(198, 167, 105, 0.15) !important;
+  }
+  
+  .collection-products-grid .new-card-price {
+    color: var(--accent-gold) !important;
+    font-weight: 700 !important;
+    font-size: 0.95rem !important;
+    margin-bottom: 0 !important;
+  }
+  
+  .collection-products-grid .new-card-rating-badge {
+    display: inline-flex !important;
+    align-items: center !important;
+    background: #EAE5D9 !important; /* Soft sand gold rating badge background */
+    color: #111111 !important;
+    padding: 2px 6px !important;
+    border-radius: 4px !important;
+    font-size: 0.65rem !important;
+    font-weight: 700 !important;
+    font-family: var(--font-sans) !important;
+    letter-spacing: 0.5px !important;
+  }
+  
+  .collection-products-grid .new-card-actions {
+    display: none !important; /* Hides original dual buttons */
+  }
+  
+  /* Compact e-commerce square gold "+" add-to-cart button */
+  .collection-products-grid .btn-new-add-to-cart {
+    display: flex !important;
+    font-size: 0 !important;
+    color: transparent !important;
+    width: 32px !important;
+    height: 32px !important;
+    border-radius: 6px !important;
+    background-color: var(--accent-gold) !important;
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='white'><path d='M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z'/></svg>") !important;
+    background-repeat: no-repeat !important;
+    background-position: center !important;
+    background-size: 16px !important;
+    border: none !important;
+    position: absolute !important;
+    right: 0.8rem !important;
+    top: 0.8rem !important; /* Aligned next to category on the right */
+    padding: 0 !important;
+    cursor: pointer !important;
+    box-shadow: 0 2px 6px rgba(198, 167, 105, 0.2) !important;
+    z-index: 10 !important;
+  }
+  
+  .collection-products-grid .btn-new-add-to-cart:hover {
+    background-color: var(--accent-hover) !important;
+  }
+  
+  .collection-products-grid .new-card-category {
+    color: var(--accent-gold) !important;
+    font-weight: 600 !important;
   }
 }
 
@@ -3292,7 +3438,7 @@ footer {
 
 @media (max-width: 576px) {
   .collection-sidebar {
-    grid-template-columns: 1fr !important; /* Single column stack widgets on phone */
+    grid-template-columns: 1fr !important; /* Single column stack widgets on phone sidebar */
   }
 }
 

@@ -331,8 +331,18 @@ document.addEventListener('DOMContentLoaded', () => {
     productsGrid.innerHTML = '';
     filteredList.forEach(product => {
       const saleBadgeHTML = product.onSale ? `<div class="new-card-badge">★ SALE</div>` : ``;
-      const ratingStars = product.rating.includes('5') ? '★★★★★' : '★★★★☆';
+      const ratingStars = product.rating.includes('5') ? '★★★★★' : '★★ball☆';
       
+      // Dynamic elegant description based on category
+      let descText = "A sophisticated and majestic eav de parfum crafted for royalty...";
+      if (product.category === 'attar') {
+        descText = "Premium pure botanical absolute attar oil of majestic longevity...";
+      } else if (product.category === 'aroma') {
+        descText = "Luxurious therapeutic aromatherapy blend to elevate your sanctuary...";
+      } else if (product.category === 'giftset') {
+        descText = "An opulent collection of our most celebrated signature fragrances...";
+      }
+
       const cardHTML = `
         <div class="new-card animate-fade-in">
           ${saleBadgeHTML}
@@ -344,7 +354,12 @@ document.addEventListener('DOMContentLoaded', () => {
           <div class="new-card-info">
             <span class="new-card-category">${product.category.toUpperCase()} / ${product.inStock ? 'IN STOCK' : 'OUT OF STOCK'}</span>
             <h3 class="new-card-title">${product.name}</h3>
-            <span class="new-card-price">Rs.${product.price.toLocaleString()}</span>
+            <p class="new-card-description">${descText}</p>
+            
+            <div class="new-card-price-row">
+              <span class="new-card-price">Rs.${product.price.toLocaleString()}</span>
+              <span class="new-card-rating-badge">${product.rating.split(' ')[0]} ★</span>
+            </div>
             
             <div class="new-card-actions">
               <button class="btn-new-buy-now btn-catalog-buy">Buy Now</button>
@@ -459,6 +474,18 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
 
+  // --- MOBILE SIDEBAR FILTERS TOGGLE SYSTEM ---
+  const btnMobileFiltersToggle = document.getElementById('btn-mobile-filters-toggle');
+  const collectionSidebar = document.querySelector('.collection-sidebar');
+  
+  if (btnMobileFiltersToggle && collectionSidebar) {
+    btnMobileFiltersToggle.addEventListener('click', () => {
+      collectionSidebar.classList.toggle('open');
+      btnMobileFiltersToggle.classList.toggle('active');
+    });
+  }
+
+
   // --- MOBILE SLIDING MENU DRAWER SYSTEM ---
   const menuDrawer = document.getElementById('mobile-menu-drawer');
   const menuOverlay = document.getElementById('menu-overlay');
@@ -491,95 +518,9 @@ document.addEventListener('DOMContentLoaded', () => {
   if (menuOverlay) menuOverlay.addEventListener('click', closeMenu);
 
   menuLinks.forEach(link => {
-    if (!link.classList.contains('menu-track-trigger')) {
-      link.addEventListener('click', closeMenu);
-    }
+    link.addEventListener('click', closeMenu);
   });
 
-
-  // --- LUXURY TRACK ORDER DRAWER SYSTEM ---
-  const trackDrawer = document.getElementById('track-drawer');
-  const trackOverlay = document.getElementById('track-overlay');
-  const btnCloseTrack = document.getElementById('btn-track-close');
-  const trackTriggers = document.querySelectorAll('.nav-track-trigger, .menu-track-trigger');
-  
-  const btnTrackSubmit = document.getElementById('btn-track-submit');
-  const trackIdInput = document.getElementById('tracking-id-input');
-  const trackLoader = document.getElementById('track-loader');
-  const trackResults = document.getElementById('tracking-results');
-
-  function openTrack(e) {
-    if (e) e.preventDefault();
-    closeMenu();
-    if (trackDrawer) trackDrawer.classList.add('open');
-    if (trackOverlay) {
-      trackOverlay.style.display = 'block';
-      setTimeout(() => {
-        trackOverlay.classList.add('open');
-      }, 10);
-    }
-  }
-
-  function closeTrack() {
-    if (trackDrawer) trackDrawer.classList.remove('open');
-    if (trackOverlay) {
-      trackOverlay.classList.remove('open');
-      setTimeout(() => {
-        trackOverlay.style.display = 'none';
-      }, 500);
-    }
-    if (trackIdInput) trackIdInput.value = '';
-    if (trackLoader) trackLoader.style.display = 'none';
-    if (trackResults) trackResults.style.display = 'none';
-  }
-
-  trackTriggers.forEach(trigger => {
-    trigger.addEventListener('click', openTrack);
-  });
-
-  if (btnCloseTrack) btnCloseTrack.addEventListener('click', closeTrack);
-  if (trackOverlay) trackOverlay.addEventListener('click', closeTrack);
-
-  if (btnTrackSubmit && trackIdInput) {
-    btnTrackSubmit.addEventListener('click', () => {
-      const trackingVal = trackIdInput.value.trim();
-      
-      if (!trackingVal) {
-        trackIdInput.style.borderColor = '#ff4a4a';
-        setTimeout(() => {
-          trackIdInput.style.borderColor = 'var(--border-color)';
-        }, 1500);
-        return;
-      }
-
-      if (trackResults) trackResults.style.display = 'none';
-      if (trackLoader) trackLoader.style.display = 'flex';
-
-      setTimeout(() => {
-        if (trackLoader) trackLoader.style.display = 'none';
-        if (trackResults) {
-          trackResults.style.display = 'block';
-          
-          const steps = trackResults.querySelectorAll('.timeline-step');
-          steps.forEach((step, index) => {
-            step.style.opacity = '0';
-            step.style.transform = 'translateY(15px)';
-            step.style.transition = 'opacity 0.4s ease, transform 0.4s ease';
-            
-            setTimeout(() => {
-              step.style.opacity = '1';
-              step.style.transform = 'translateY(0)';
-            }, index * 200);
-          });
-        }
-      }, 1200);
-    });
-
-    trackIdInput.addEventListener('keypress', (e) => {
-      if (e.key === 'Enter') {
-        btnTrackSubmit.click();
-      }
-    });
-  }
+  // Dedicated Track Order page handles tracking logic on track-order.html
 
 });

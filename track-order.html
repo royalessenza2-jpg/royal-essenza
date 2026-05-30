@@ -1,0 +1,457 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Royal Essenza Tracking - Trace your luxury bespoke fragrance shipment and order status in real-time.">
+  <title>Track Your Order | Royal Essenza Premium</title>
+  
+  <!-- Core styling link -->
+  <link rel="stylesheet" href="style.css">
+  
+  <style>
+    /* Inline helper styles specifically for the dedicated Track Order page to ensure absolute safety & zero leaks */
+    .track-page-body {
+      background-color: #FFFFFF !important;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+    
+    .track-main-content {
+      flex-grow: 1;
+      padding-top: 150px;
+      padding-bottom: 6rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    
+    .track-container {
+      width: 100%;
+      max-width: 800px;
+      margin: 0 auto;
+      text-align: center;
+      padding: 0 2rem;
+    }
+    
+    /* Elegant Dark Luxury Title */
+    .track-title-luxury {
+      font-family: var(--font-serif);
+      font-size: 2.8rem;
+      font-weight: 600; /* Bold serif feels very premium & heavy weight */
+      color: #111111 !important; /* Bold Luxury Black instead of light gold */
+      letter-spacing: 4px;
+      text-transform: uppercase;
+      margin-bottom: 1rem;
+      animation: fadeInUp 0.8s ease forwards;
+    }
+    
+    /* High contrast dark charcoal description */
+    .track-subtitle-luxury {
+      font-family: var(--font-sans);
+      font-size: 1rem;
+      font-weight: 400 !important; /* Thickened text weight for high legibility */
+      color: #222222 !important; /* High contrast charcoal instead of light gray */
+      letter-spacing: 0.5px;
+      margin-bottom: 3.5rem;
+      line-height: 1.6;
+      max-width: 600px;
+      margin-left: auto;
+      margin-right: auto;
+      animation: fadeInUp 0.8s ease forwards;
+      animation-delay: 0.1s;
+      opacity: 0;
+    }
+    
+    /* Center Input Pill Card exactly matching bin-mazhar screenshot styling proportions */
+    .track-luxury-card {
+      background-color: #F7F5F0; /* Soft Ivory/Alabaster cream */
+      border: 1px solid var(--border-color);
+      border-radius: 50px;
+      padding: 10px 10px 10px 24px;
+      display: flex;
+      align-items: center;
+      box-shadow: 0 8px 30px rgba(0, 0, 0, 0.03);
+      position: relative;
+      margin-bottom: 4rem;
+      background-image: url('assets/design.png'); /* luxury gold geometric line background */
+      background-size: 100% 100%;
+      background-repeat: no-repeat;
+      animation: fadeInUp 0.8s ease forwards;
+      animation-delay: 0.2s;
+      opacity: 0;
+    }
+    
+    .track-input-wrapper-inner {
+      display: flex;
+      align-items: center;
+      flex-grow: 1;
+      gap: 12px;
+    }
+    
+    .track-icon-luxury {
+      color: var(--accent-gold);
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+    }
+    
+    .track-input-field-luxury {
+      border: none !important;
+      background: transparent !important;
+      outline: none !important;
+      width: 100%;
+      font-family: var(--font-sans);
+      font-size: 1rem;
+      color: #111111 !important; /* Deep dark black text */
+      font-weight: 500 !important;
+      padding: 8px 0;
+    }
+    
+    /* High contrast dark placeholder */
+    .track-input-field-luxury::placeholder {
+      color: #555555 !important; /* Dark legible gray instead of light grey */
+      font-weight: 400 !important;
+    }
+    
+    .btn-track-now-luxury {
+      background-color: #111111; /* Luxury premium charcoal/black button */
+      color: #FFFFFF;
+      border: 1px solid #111111;
+      border-radius: 40px;
+      padding: 14px 35px;
+      font-family: var(--font-sans);
+      font-size: 0.9rem;
+      font-weight: 600;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      transition: var(--transition-fast);
+      flex-shrink: 0;
+    }
+    
+    .btn-track-now-luxury:hover {
+      background-color: var(--accent-gold);
+      border-color: var(--accent-gold);
+      color: #FFFFFF;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 15px rgba(198, 167, 105, 0.2);
+    }
+    
+    /* Header nav link overrides specifically for light page canvas */
+    .nav-desktop .nav-link {
+      color: #111111 !important; /* Dark bold links instead of soft gray */
+      font-weight: 600 !important;
+    }
+    
+    .nav-desktop .nav-link.active {
+      color: var(--accent-gold) !important;
+    }
+    
+    header .mobile-menu-btn {
+      color: #111111 !important; /* Dark hamburger icon */
+    }
+    
+    /* Interactive Timeline directly below */
+    .track-results-block {
+      max-width: 600px;
+      margin: 0 auto;
+      text-align: left;
+    }
+    
+    .track-loader-luxury {
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem 0;
+      gap: 1rem;
+    }
+    
+    .track-loader-luxury p {
+      font-family: var(--font-sans);
+      font-size: 0.9rem;
+      color: var(--accent-gold);
+      letter-spacing: 1px;
+      font-weight: 400;
+    }
+    
+    .tracking-results-luxury {
+      display: none;
+      background: #FFFFFF;
+      border: 1px solid var(--border-color);
+      border-radius: 20px;
+      padding: 2.5rem;
+      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.02);
+      animation: fadeIn 0.6s ease forwards;
+    }
+    
+    /* Shipment tracking timeline styling overrides for perfect legibility on white background */
+    .status-label {
+      color: #444444 !important;
+      font-weight: 500 !important;
+      font-size: 0.85rem !important;
+    }
+    
+    .status-value.highlight {
+      color: var(--accent-gold) !important;
+      font-weight: 600 !important;
+    }
+    
+    .timeline-step.completed .step-title {
+      color: #111111 !important; /* Bold solid black for completed steps */
+      font-weight: 600 !important;
+    }
+    
+    .timeline-step.active .step-title {
+      color: var(--accent-gold) !important;
+      font-weight: 600 !important;
+    }
+    
+    .timeline-step.pending .step-title {
+      color: #555555 !important;
+      font-weight: 500 !important;
+    }
+    
+    .step-time {
+      color: #444444 !important;
+      font-weight: 500 !important;
+    }
+    
+    .step-desc {
+      color: #222222 !important;
+      background-color: #F7F5F0 !important;
+      padding: 10px 14px !important;
+      border-radius: 8px !important;
+      border-left: 3px solid var(--accent-gold) !important;
+      line-height: 1.5 !important;
+    }
+    
+    /* Mobile responsive styling for the input card pill */
+    @media (max-width: 992px) {
+      .track-main-content {
+        padding-top: 130px;
+        padding-bottom: 4rem;
+      }
+      
+      .track-title-luxury {
+        font-size: 2.2rem !important;
+        letter-spacing: 2px !important;
+      }
+    }
+    
+    @media (max-width: 768px) {
+      .track-luxury-card {
+        flex-direction: column;
+        border-radius: 24px;
+        padding: 20px;
+        gap: 16px;
+      }
+      
+      .track-input-wrapper-inner {
+        width: 100%;
+        border-bottom: 1px solid rgba(0,0,0,0.06);
+        padding-bottom: 10px;
+      }
+      
+      .btn-track-now-luxury {
+        width: 100%;
+        padding: 12px 20px;
+      }
+    }
+    
+    @media (max-width: 576px) {
+      .track-title-luxury {
+        font-size: 1.8rem !important;
+        letter-spacing: 1px !important;
+      }
+      
+      .track-subtitle-luxury {
+        font-size: 0.92rem !important;
+        margin-bottom: 2.5rem !important;
+        padding: 0 10px;
+      }
+      
+      .tracking-results-luxury {
+        padding: 1.5rem !important;
+      }
+    }
+    
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+  </style>
+</head>
+<body class="track-page-body">
+
+  <!-- Sub-page Navigation Header -->
+  <header>
+    <div class="container nav-container">
+      <!-- Left side: Back to Home Arrow -->
+      <div class="nav-back-wrapper">
+        <a href="index.html" class="nav-back-btn" aria-label="Back to Home">
+          <svg style="width: 28px; height: 28px; fill: #111111;" viewBox="0 0 24 24">
+            <path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/>
+          </svg>
+        </a>
+      </div>
+      
+      <!-- Centered Logo Image Only -->
+      <a href="index.html" class="logo logo-center" aria-label="Royal Essenza Home">
+        <img src="assets/logo.png" alt="Royal Essenza" class="brand-logo-img">
+      </a>
+      
+      <!-- Right side: Sub-page Desktop Navigation -->
+      <nav class="nav-desktop">
+        <a href="index.html" class="nav-link">Home</a>
+        <a href="collection.html" class="nav-link">Collections</a>
+        <a href="#" class="nav-link active" style="color: var(--accent-gold);">Track Order</a>
+        <a href="index.html#contact" class="nav-link">Contact</a>
+      </nav>
+      
+      <!-- Mobile Menu Button (Hamburger) -->
+      <button class="mobile-menu-btn" id="btn-menu-open" aria-label="Open Menu">
+        <svg style="width: 24px; height: 24px; fill: currentColor;" viewBox="0 0 24 24">
+          <path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/>
+        </svg>
+      </button>
+    </div>
+  </header>
+
+  <!-- Dedicated Track Order Main Section -->
+  <main class="track-main-content">
+    <div class="track-container">
+      
+      <!-- Luxury Gilded Headings -->
+      <h1 class="track-title-luxury">Track Your Order</h1>
+      <p class="track-subtitle-luxury">
+        Enter your Royal Tracking ID or registered mobile phone number to trace your bespoke aromatic package and view its live transit history in real-time.
+      </p>
+      
+      <!-- Centered Input Pill Card -->
+      <div class="track-luxury-card">
+        <div class="track-input-wrapper-inner">
+          <span class="track-icon-luxury">
+            <!-- Luxury Phone/ID tracking SVG icon -->
+            <svg style="width: 20px; height: 20px; fill: currentColor;" viewBox="0 0 24 24">
+              <path d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"/>
+            </svg>
+          </span>
+          <input type="text" id="tracking-input-luxury" class="track-input-field-luxury" placeholder="e.g. RE-1008 or 0300 1234567" aria-label="Tracking ID or Phone Number">
+        </div>
+        <button class="btn-track-now-luxury" id="btn-track-submit-luxury">Track Now</button>
+      </div>
+      
+      <!-- Interactive Tracking Timeline Results Block -->
+      <div class="track-results-block">
+        
+        <!-- Spinner Loader -->
+        <div class="track-loader-luxury" id="track-loader-luxury">
+          <div class="luxury-spinner"></div>
+          <p>Connecting to Royal Concierge...</p>
+        </div>
+        
+        <!-- Live Status Timeline Details -->
+        <div class="tracking-results-luxury" id="track-results-luxury">
+          <div class="tracking-status-header">
+            <span class="status-label">Current Status:</span>
+            <span class="status-value highlight" id="status-value-text">In Transit</span>
+          </div>
+          
+          <div class="tracking-timeline">
+            <!-- Step 1 -->
+            <div class="timeline-step completed">
+              <div class="timeline-dot"></div>
+              <div class="timeline-info">
+                <h4 class="step-title">Order Placed & Certified</h4>
+                <p class="step-time">May 28, 2026 - 10:30 AM</p>
+              </div>
+            </div>
+            
+            <!-- Step 2 -->
+            <div class="timeline-step completed">
+              <div class="timeline-dot"></div>
+              <div class="timeline-info">
+                <h4 class="step-title">Dispatched from Royal Fragrance Lab</h4>
+                <p class="step-time">May 28, 2026 - 4:15 PM</p>
+              </div>
+            </div>
+            
+            <!-- Step 3 -->
+            <div class="timeline-step active">
+              <div class="timeline-dot"></div>
+              <div class="timeline-info">
+                <h4 class="step-title">In Transit via Royal Concierge</h4>
+                <p class="step-time">May 29, 2026 - 09:00 AM</p>
+                <p class="step-desc">Your bespoke aromatic package is with our premium courier service in Dubai, currently in transit to your destination.</p>
+              </div>
+            </div>
+            
+            <!-- Step 4 -->
+            <div class="timeline-step pending">
+              <div class="timeline-dot"></div>
+              <div class="timeline-info">
+                <h4 class="step-title">Out for Delivery & Handover</h4>
+                <p class="step-time">Expected: May 30, 2026</p>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+      </div>
+      
+    </div>
+  </main>
+
+  <!-- Mobile Menu Drawer Panel (Shared across sub-pages) -->
+  <div class="menu-overlay" id="menu-overlay"></div>
+  <div class="mobile-menu-drawer" id="mobile-menu-drawer">
+    <div class="menu-header">
+      <div class="menu-logo-wrapper">
+        <img src="assets/logo.png" alt="Royal Essenza" class="menu-logo-img">
+      </div>
+      <button class="btn-close-menu" id="btn-menu-close" aria-label="Close menu">
+        <svg style="width: 24px; height: 24px; fill: currentColor;" viewBox="0 0 24 24">
+          <path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/>
+        </svg>
+      </button>
+    </div>
+    
+    <div class="menu-links-wrapper">
+      <a href="index.html" class="menu-link">Home</a>
+      <a href="collection.html" class="menu-link">Collection</a>
+      <a href="#" class="menu-link active" style="color: var(--accent-gold);">Track Order</a>
+      <a href="index.html#contact" class="menu-link">Contact</a>
+    </div>
+    
+    <div class="menu-drawer-footer">
+      <p class="menu-drawer-tagline">The Essence of Excellence.</p>
+      <div class="menu-drawer-socials">
+        <a href="#" class="social-circle" aria-label="Instagram">
+          <svg style="width: 16px; height: 16px; fill: currentColor;" viewBox="0 0 16 16"><path d="M8 0C5.829 0 5.556.01 4.703.048 3.85.088 3.269.222 2.76.42a3.917 3.917 0 0 0-1.417.923A3.927 3.927 0 0 0 .42 2.76C.222 3.268.087 3.85.048 4.7.01 5.555 0 5.827 0 8.001c0 2.172.01 2.444.048 3.297.04.852.174 1.433.372 1.942.205.526.478.972.923 1.417.444.445.89.719 1.416.923.51.198 1.09.333 1.942.372C5.555 15.99 5.827 16 8 16s2.444-.01 3.298-.048c.851-.04 1.434-.174 1.943-.372a3.916 3.916 0 0 0 1.416-.923c.445-.445.718-.891.923-1.417.197-.509.332-1.09.372-1.942C15.99 10.445 16 10.173 16 8s-.01-2.445-.048-3.299c-.04-.851-.175-1.433-.372-1.941a3.926 3.926 0 0 0-.923-1.417A3.911 3.911 0 0 0 13.24.42c-.51-.198-1.092-.333-1.943-.372C10.443.01 10.172 0 7.998 0h.003zm-.717 1.442h.718c2.136 0 2.389.007 3.232.046.78.035 1.204.166 1.486.275.373.145.64.319.92.599.28.28.453.546.598.92.11.281.24.705.275 1.485.039.843.047 1.096.047 3.231s-.008 2.389-.047 3.232c-.035.78-.166 1.203-.275 1.485a2.47 2.47 0 0 1-.599.919c-.28.28-.546.453-.92.598-.28.11-.704.24-1.485.276-.843.038-1.096.047-3.232.047s-2.39-.009-3.233-.047c-.78-.036-1.203-.166-1.485-.276a2.478 2.478 0 0 1-.92-.598 2.48 2.48 0 0 1-.6-.92c-.109-.281-.24-.705-.275-1.485-.038-.843-.046-1.096-.046-3.233 0-2.136.008-2.388.046-3.231.036-.78.166-1.204.276-1.486.145-.373.319-.64.599-.92.28-.28.546-.453.92-.598.282-.11.705-.24 1.485-.276.738-.034 1.024-.044 2.515-.045v.002zm4.988 1.328a.96.96 0 1 0 0 1.92.96.96 0 0 0 0-1.92zm-4.27 1.122a4.109 4.109 0 1 0 0 8.217 4.109 4.109 0 0 0 0-8.217zm0 1.441a2.667 2.667 0 1 1 0 5.334 2.667 2.667 0 0 1 0-5.334z"/></svg>
+        </a>
+        <a href="#" class="social-circle" aria-label="TikTok">
+          <svg style="width: 16px; height: 16px; fill: currentColor;" viewBox="0 0 24 24"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-5.2 1.74 2.89 2.89 0 0 1 2.31-4.64 2.93 2.93 0 0 1 .88.13V9.4a6.84 6.84 0 0 0-1 .05A6.33 6.33 0 0 0 5 20.1a6.34 6.34 0 0 0 10.86-4.43v-7a8.16 8.16 0 0 0 4.77 1.52v-3.4a4.85 4.85 0 0 1-1.04-.1z"/></svg>
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Minimal Matte Gold Footer Copyright Bar -->
+  <footer class="simple-footer" style="margin-top: auto;">
+    <div class="container text-center">
+      <p class="copyright">&copy; 2026 ROYAL ESSENZA. All Rights Reserved.</p>
+    </div>
+  </footer>
+
+  <!-- Script for Dedicated Track Order logic -->
+  <script src="track-order.js"></script>
+</body>
+</html>
